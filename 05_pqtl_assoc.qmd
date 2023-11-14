@@ -1,0 +1,176 @@
+# Sclerostin pQTL associations
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+#| echo: false
+
+# Libraries
+library(dplyr)
+library(geni.plots)
+library(reactable)
+library(ggiraph)
+
+# Functions
+source("./scripts/00_functions.R")
+```
+
+Genetic associations of the sclerostin pQTLs in the datasets in [@tbl-gwas-study-info].  
+
+```{r}
+#| label: data
+
+load("./data/03_data_gwas_pqtls.Rda")
+gwas <- studies %>%
+  select(id, pmid, trait, n, n_cases, flag) %>%
+  inner_join(
+    x = .,
+    y = gwas,
+    by = "id"
+  ) 
+```
+
+```{r}
+#| label: download-pqtls-gwas
+#| echo: false
+
+gwas %>%
+  select(-c(flag)) %>%
+  downloadthis::download_this(
+    output_name = "gwas",
+    output_extension = ".xlsx",
+    button_label = "Download as xlsx",
+    button_type = "primary",
+    has_icon = TRUE,
+    icon = "fa fa-save"
+  )
+```
+
+<details>
+<summary>README</summary>
+
+* `id` - dataset ID  
+* `pmid` - PubMed ID  
+* `trait` - phenotype  
+* `n` - number of samples  
+* `n_cases` - number of cases  
+* `rsid` - rsID  
+* `chr` - chromosome  
+* `pos` - position (build 37)  
+* `ref` - reference allele  
+* `alt` - alternate allele (effect allele)  
+* `af` - allele frequency of the alternate allele  
+* `beta` - effect size  
+* `se` - standard error  
+* `pvalue` - *p*-value  
+
+</details>
+
+## Original datasets
+
+Genetic associations of the sclerostin pQTLs with cardiovascular events and risk factors in the datasets in [@tbl-gwas-study-info] that were analysed by @zheng2023 (or equivalent[^1]).  
+
+::: {.panel-tabset}
+
+### Associations
+
+```{r}
+#| label: pqtls-assoc
+
+assoc <- gwas %>%
+  filter(flag == "Y" & !(id %in% c("GCST006979", "GCST006980"))) %>%
+  select(id, pmid, trait, n, n_cases, rsid, pvalue) %>%
+  arrange(pvalue)
+```
+
+```{r}
+#| label: tbl-pqtls-assoc
+#| tbl-cap: GWAS associations with sclerostin pQTLs (original datasets)
+#| echo: false
+
+empty_kable()
+
+assoc %>%
+  reactable(
+    searchable = TRUE,
+    pagination = TRUE,
+    bordered = TRUE,
+    striped = TRUE,
+    columns = list(
+      id = colDef(name = "Dataset ID", minWidth = 100, align = "left"),
+      pmid = colDef(name = "PubMed ID", minWidth = 80, align = "left"),
+      trait = colDef(name = "Phenotype", minWidth = 140, align = "left"),
+      n = colDef(name = "Number of samples", minWidth = 80, align = "left"),
+      n_cases = colDef(name = "Number of cases", minWidth = 80, align = "left"),
+      rsid = colDef(name = "rsID", minWidth = 100, align = "left"),
+      pvalue = colDef(name = "P-value", minWidth = 80, align = "left")
+    )
+  )
+```
+
+### QQ plot
+
+```{r}
+#| label: fig-qq-pqtls-assoc
+#| fig-cap: QQ plot of GWAS associations with sclerostin pQTLs (original datasets)
+
+qq_plot(assoc)
+```
+
+:::
+
+## Additional datasets
+
+Genetic associations of the sclerostin pQTLs with cardiovascular events and risk factors in the additional recent GWAS datasets in [@tbl-gwas-study-info].  
+
+::: {.panel-tabset}
+
+### Associations
+
+```{r}
+#| label: pqtls-assoc-add
+
+assoc_add <- gwas %>%
+  filter(flag == "N") %>%
+  select(id, pmid, trait, n, n_cases, rsid, pvalue) %>%
+  arrange(pvalue)
+```
+
+```{r}
+#| label: tbl-pqtls-assoc-add
+#| tbl-cap: GWAS associations with sclerostin pQTLs (additional datasets)
+#| echo: false
+
+empty_kable()
+
+assoc_add %>%
+  reactable(
+    searchable = TRUE,
+    pagination = TRUE,
+    bordered = TRUE,
+    striped = TRUE,
+    columns = list(
+      id = colDef(name = "Dataset ID", minWidth = 100, align = "left"),
+      pmid = colDef(name = "PubMed ID", minWidth = 80, align = "left"),
+      trait = colDef(name = "Phenotype", minWidth = 140, align = "left"),
+      n = colDef(name = "Number of samples", minWidth = 80, align = "left"),
+      n_cases = colDef(name = "Number of cases", minWidth = 80, align = "left"),
+      rsid = colDef(name = "rsID", minWidth = 100, align = "left"),
+      pvalue = colDef(name = "P-value", minWidth = 80, align = "left")
+    )
+  )
+```
+
+### QQ plot
+
+```{r}
+#| label: fig-qq-pqtls-assoc-add
+#| fig-cap: QQ plot of GWAS associations with sclerostin pQTLs (additional datasets)
+
+qq_plot(assoc_add)
+```
+
+:::
+
+[^1]: The ischemic and cardioembolic stroke GWAS results from METASTROKE [@malik2016] used by @zheng2023 were replaced with those from MEGASTROKE [@malik2018] and the UK Biobank hypertension GWAS results from [OpenGWAS](https://gwas.mrcieu.ac.uk/datasets/ukb-b-14057/) used by @zheng2023 were replaced with those from [Pan-UKBB](https://pan.ukbb.broadinstitute.org/downloads) due to licensing restrictions. The GWAS of coronary artery calcification was not available either publicly or via application at the time of this analysis [@kavousi2022].  

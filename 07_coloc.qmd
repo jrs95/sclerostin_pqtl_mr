@@ -1,0 +1,388 @@
+# Colocalization analyses
+
+Colocalization analyses are used to detect whether genetic signals from GWAS studies in a genomic region are consistent with a shared causal genetic variant(s) [@giambartolomei2014]. This analysis produces five probabilities which add up to 1:
+
+* $P(H0)$ - probability that there is no genetic signal with either sclerostin levels or the phenotype in the *SOST* region  
+* $P(H1)$ - probability that there is a genetic signal with sclerostin levels in the *SOST* region but not with the phenotype  
+* $P(H2)$ - probability that there is a genetic signal with phenotype in the *SOST* region but not with sclerostin levels  
+* $P(H3)$ - probability that there is a genetic signal with both sclerostin levels and the phenotype in the *SOST* region but these signals are independent[^1] (i.e., they are not the same)  
+* $P(H4)$ - probability that there is a shared genetic signal between sclerostin levels and the phenotype in the *SOST* region  
+
+<!-- As we know there is a genetic signal with circulating sclerostin in the *SOST* region, $P(H0)$ and $P(H2)$ are likely to be close to 0. Hence, we are mostly interested in $P(H1)$, $P(H3)$ and $P(H4)$:  
+
+* If $P(H1)$ is high (e.g., > 0.8), this means that the model is putting a high probability on there not being a genetic association with the phenotype in the *SOST* region.  
+* If $P(H3)$ is high (e.g., > 0.8), then at least the top associated genetic signal for circulating sclerostin and the phenotype in the *SOST* region are unlikely to be the same.  
+* If $P(H4)$ is high (e.g., > 0.8), the top associated genetic signal for circulating sclerostin and the phenotype in the *SOST* region is likely to be shared, this is known as colocalization.  -->
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+#| echo: false
+
+# Libraries
+library(data.table)
+library(dplyr)
+library(reactable)
+library(htmltools)
+library(tippy)
+
+# Functions
+source("./scripts/00_functions.R")
+```
+
+## Data
+
+These results were extracted from Supplementary Table 10 in @zheng2023.[^2]  
+
+```{r}
+#| label: coloc-table
+
+# Data
+coloc_table <- fread(
+  "./data/00_data_coloc.tsv",
+  header = TRUE, data.table = FALSE, sep = "\t"
+)
+
+# Process
+coloc_table <- coloc_table %>%
+  as_tibble() %>%
+  mutate(
+    across(starts_with("pph"), ~ round(.x, 4))
+  ) %>%
+  filter(!(id %in% c("GCST006979", "GCST006980"))) # drop results with fracture and bone mineral density
+```
+
+```{r}
+#| label: download-coloc-table
+#| echo: false
+
+coloc_table %>%
+  downloadthis::download_this(
+    output_name = "coloc",
+    output_extension = ".xlsx",
+    button_label = "Download as xlsx",
+    button_type = "primary",
+    has_icon = TRUE,
+    icon = "fa fa-save"
+  )
+```
+
+<details>
+<summary>README</summary>
+
+* `id` - dataset ID  
+* `pmid` - PubMed ID  
+* `trait` - phenotype  
+* `n` - number of samples  
+* `n_cases` - number of cases  
+* `n_snps` - number of SNPs  
+* `pph0` - probability that there is no genetic signal with either sclerostin levels or the phenotype in the *SOST* region   
+* `pph1` - probability that there is a genetic signal with sclerostin levels in the *SOST* region but not with the phenotype  
+* `pph2` - probability that there is a genetic signal with phenotype in the *SOST* region but not with sclerostin levels  
+* `pph3` - probability that there is a genetic signal with both sclerostin levels and the phenotype in the *SOST* region but these signals are independent (i.e., they are not the same)  
+* `pph4` - probability that there is a shared genetic signal between sclerostin levels and the phenotype in the *SOST* region  
+
+</details>
+
+## Results
+
+```{r}
+#| label: tbl-coloc-table
+#| tbl-cap: Colocalization results of sclerostin with the phenotypes tested in the *SOST* region [@zheng2023]
+#| echo: false
+
+empty_kable()
+
+with_tooltip <- function(value, tooltip) {
+  tags$abbr(
+    style = "cursor: help",
+    title = tooltip, value
+  )
+}
+
+coloc_table %>%
+  select(id, trait, n_snps, starts_with("pph")) %>%
+  reactable(
+    searchable = TRUE,
+    pagination = TRUE,
+    bordered = TRUE,
+    striped = TRUE,
+    columns = list(
+      id = colDef(name = "Dataset ID", minWidth = 110, align = "left"),
+      trait = colDef(name = "Phenotype", minWidth = 160, align = "left"),
+      n_snps = colDef(name = "N SNPs", minWidth = 70, align = "left"),
+      pph0 = colDef(
+        header = with_tooltip(
+          "PPH0",
+          "Posterior probability that that there is no genetic signal with either sclerostin levels or the phenotype in the SOST region (%)"
+        ),
+        format = colFormat(percent = TRUE, digits = 2),
+        minWidth = 70, align = "left", html = TRUE
+      ),
+      pph1 = colDef(
+        header = with_tooltip(
+          "PPH1",
+          "Posterior probability that there is a genetic signal with sclerostin levels in the SOST region but not with the phenotype (%)"
+        ),
+        format = colFormat(percent = TRUE, digits = 2),
+        minWidth = 70, align = "left", html = TRUE
+      ),
+      pph2 = colDef(
+        header = with_tooltip(
+          "PPH2",
+          "Posterior probability that there is a genetic signal with phenotype in the SOST region but not with sclerostin levels (%)"
+        ),
+        format = colFormat(percent = TRUE, digits = 2),
+        minWidth = 70, align = "left", html = TRUE
+      ),
+      pph3 = colDef(
+        header = with_tooltip(
+          "PPH3",
+          "Posterior probability that there is a genetic signal with both sclerostin levels and the phenotype in the SOST region but these genetic signals are independent (i.e., they are not the same) (%)"
+        ),
+        format = colFormat(percent = TRUE, digits = 2),
+        minWidth = 70, align = "left", html = TRUE
+      ),
+      pph4 = colDef(
+        header = with_tooltip(
+          "PPH4",
+          "Posterior probability that there is a shared genetic signal between sclerostin levels and the phenotype in the SOST region (%)"
+        ),
+        format = colFormat(percent = TRUE, digits = 2),
+        minWidth = 70, align = "left", html = TRUE
+      )
+    )
+  )
+```
+
+## Additional analyses
+
+### Data
+
+```{r}
+#| label: data
+
+# Data
+load("./data/01_data_ldmat.Rda")
+load("./data/02_data_gwas_sost_region.Rda")
+
+## pQTLs
+pqtls <- pqtls %>%
+  arrange(pvalue)
+
+## GWAS
+gwas <- gwas %>%
+  filter(
+    (
+      !grepl("^UKB3", id) &
+        chr == "17" &
+        pos >= 41831099 - 100000 &
+        pos <= 41836156 + 100000
+    ) |
+      grepl("^UKB3", id) # keep additional CD300LG variants only for lipid measures
+  ) %>%
+  mutate(z = round(beta / se, 6)) %>%
+  filter(!is.na(z) & !is.na(se))
+```
+
+Since we only had access to the top associated sclerostin pQTLs in the *SOST* region, we imputed the circulating sclerostin associations in the *SOST* region using each pQTL. These imputed associations were then used in the colocalization analyses [@giambartolomei2014].[^3]  
+
+```{r}
+#| label: impute-pqtl-data
+
+# Impute pQTL data
+pqtls_impute <- list()
+for (rsid in pqtls$rsid) {
+  pqtls_impute[[rsid]] <- gwas_impute(
+    data = pqtls %>%
+      filter(rsid == !!rsid) %>%
+      rename(oa = ref, ea = alt, eaf = af),
+    snpinfo = ld_snps,
+    corr = ld_mat,
+    n = 29381
+  ) %>%
+    mutate(z = round(beta / se, 6)) %>%
+    filter(!is.na(z) & !is.na(se))
+}
+```
+
+### Analyses
+
+```{r}
+#| label: coloc-analyses
+
+# Colocalization analyses
+coloc_results <- tibble()
+for (id in unique(gwas$id)) {
+
+  ## Colocalization pQTLs
+  for (rsid in pqtls$rsid) {
+
+    ### Colocalization data
+    coloc_data <- gwas %>%
+      filter(id == !!id) %>%
+      inner_join(
+        x = pqtls_impute[[rsid]],
+        y = .,
+        by = c("rsid", "chr", "pos", "ref", "alt"),
+        suffix = c("_1", "_2")
+      ) %>%
+      relocate(id, .before = rsid)
+
+    ### Colocalization Bayes factors
+    bf1 <- coloc_bf(
+      z = coloc_data$z_1,
+      v = coloc_data$se_1^2
+    )
+    bf2 <- coloc_bf(
+      z = coloc_data$z_2,
+      v = coloc_data$se_2^2,
+      binary = !(
+        studies %>%
+          filter(id == !!id) %>%
+          pull(n_cases) %>%
+          is.na(.)
+      )
+    )
+
+    ### Colocalization analysis
+    coloc_analysis <- coloc(bf1, bf2) %>%
+      round(., 4) %>%
+      t(.) %>%
+      as_tibble() %>%
+      mutate(
+        id = !!id,
+        pqtl = !!rsid,
+        n_snps = !!nrow(coloc_data)
+      ) %>%
+      relocate(id, n_snps, pqtl, .before = 1)
+
+    ### Colocalization results
+    coloc_results <- coloc_results %>%
+      bind_rows(coloc_analysis)
+
+  }
+
+}
+```
+
+```{r}
+#| label: coloc-results
+
+coloc_results <- coloc_results %>%
+  inner_join(
+    x = select(studies, id, pmid, trait, n, n_cases),
+    y = .,
+    by = "id"
+  )
+```
+
+```{r}
+#| label: download-coloc-results
+#| echo: false
+
+coloc_results %>%
+  downloadthis::download_this(
+    output_name = "coloc",
+    output_extension = ".xlsx",
+    button_label = "Download as xlsx",
+    button_type = "primary",
+    has_icon = TRUE,
+    icon = "fa fa-save"
+  )
+```
+
+<details>
+<summary>README</summary>
+
+* `id` - dataset ID  
+* `pmid` - PubMed ID  
+* `trait` - phenotype  
+* `n` - number of samples  
+* `n_cases` - number of cases  
+* `n_snps` - number of SNPs  
+* `pqtl` - pQTL used to impute the sclerostin genetic associations in the *SOST* region   
+* `pph0` - probability that there is no genetic signal with either sclerostin levels or the phenotype in the *SOST* region   
+* `pph1` - probability that there is a genetic signal with sclerostin levels in the *SOST* region but not with the phenotype  
+* `pph2` - probability that there is a genetic signal with phenotype in the *SOST* region but not with sclerostin levels  
+* `pph3` - probability that there is a genetic signal with both sclerostin levels and the phenotype in the *SOST* region but these genetic signals are independent (i.e., they are not the same)  
+* `pph4` - probability that there is a shared genetic signal between sclerostin levels and the phenotype in the *SOST* region  
+
+</details>
+
+### Results
+
+```{r}
+#| label: tbl-coloc-results
+#| tbl-cap: Colocalization results of sclerostin with the phenotypes tested in the *SOST* region
+#| echo: false
+
+empty_kable()
+
+with_tooltip <- function(value, tooltip) {
+  tags$abbr(
+    style = "cursor: help",
+    title = tooltip, value
+  )
+}
+
+coloc_results %>%
+  select(id, trait, n_snps, pqtl, starts_with("pph")) %>%
+  reactable(
+    searchable = TRUE,
+    pagination = TRUE,
+    bordered = TRUE,
+    striped = TRUE,
+    columns = list(
+      id = colDef(name = "Dataset ID", minWidth = 110, align = "left"),
+      trait = colDef(name = "Phenotype", minWidth = 160, align = "left"),
+      n_snps = colDef(name = "N SNPs", minWidth = 70, align = "left"),
+      pqtl = colDef(name = "pQTL", minWidth = 90, align = "left"),
+      pph0 = colDef(
+        header = with_tooltip(
+          "PPH0",
+          "Posterior probability that that there is no genetic signal with either sclerostin levels or the phenotype in the SOST region (%)"
+        ),
+        format = colFormat(percent = TRUE, digits = 2),
+        minWidth = 70, align = "left", html = TRUE
+      ),
+      pph1 = colDef(
+        header = with_tooltip(
+          "PPH1",
+          "Posterior probability that there is a genetic signal with sclerostin levels in the SOST region but not with the phenotype (%)"
+        ),
+        format = colFormat(percent = TRUE, digits = 2),
+        minWidth = 70, align = "left", html = TRUE
+      ),
+      pph2 = colDef(
+        header = with_tooltip(
+          "PPH2",
+          "Posterior probability that there is a genetic signal with phenotype in the SOST region but not with sclerostin levels (%)"
+        ),
+        format = colFormat(percent = TRUE, digits = 2),
+        minWidth = 70, align = "left", html = TRUE
+      ),
+      pph3 = colDef(
+        header = with_tooltip(
+          "PPH3",
+          "Posterior probability that there is a genetic signal with both sclerostin levels and the phenotype in the SOST region but these genetic signals are independent (i.e., they are not the same) (%)"
+        ),
+        format = colFormat(percent = TRUE, digits = 2),
+        minWidth = 70, align = "left", html = TRUE
+      ),
+      pph4 = colDef(
+        header = with_tooltip(
+          "PPH4",
+          "Posterior probability that there is a shared genetic signal between sclerostin levels and the phenotype in the SOST region (%)"
+        ),
+        format = colFormat(percent = TRUE, digits = 2),
+        minWidth = 70, align = "left", html = TRUE
+      )
+    )
+  )
+```
+
+[^1]: This model assumes that there is at most one genetic signal for circulating sclerostin and the phenotype in the *SOST* region. This assumption is satisfied for the sclerostin pQTLs because we impute the associations in the *SOST* region based on each pQTL. Similar results were also found when relaxing this assumption for the phenotypes combining fine-mapping and colocalization approaches [@wallace2021], with only the genetic signals of heel bone mineral density and fracture colocalizing with the genetic signals of circulating sclerostin in the *SOST* region ($P(H4)$ > 0.8).  
+[^2]: The *SOST* region was defined as 500kb either side of the *SOST*.  
+[^3]: The prior probabilities were set to `p1 = 1e-4`, `p2 = 1e-4` and `p12 = 2e-6` [@giambartolomei2014; @foley2021].  

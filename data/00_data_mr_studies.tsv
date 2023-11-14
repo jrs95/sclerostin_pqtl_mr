@@ -1,0 +1,7 @@
+id	pmid	author	trait	abbr	ancestry	n	n_cases	n_controls	unit	flag
+IEUA1108	26935894	Malik R	Ischemic stroke	IS	Trans-ethnic	29633	10307	19326	log OR	Y
+IEUA1109	26935894	Malik R	Cardioembolic stroke	CES	Trans-ethnic	21185	1859	19326	log OR	Y
+IEUA1110	26935894	Malik R	Large vessel disease	LVD	Trans-ethnic	21143	1817	19326	log OR	Y
+IEUA1111	26935894	Malik R	Small vessel disease	SVD	Trans-ethnic	20675	1349	19326	log OR	Y
+UKBB14057	25826379	Elsworth B	Hypertension	HTN	European	462933	119731	343202	log OR	Y
+PHS000930CAC		Kavousi M	Coronary artery calcification	CAC	Trans-ethnic	26909			SD	Y

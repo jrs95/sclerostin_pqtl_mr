@@ -1,0 +1,358 @@
+# Data
+
+The sclerostin pQTLs and GWAS results for are processed using the scripts sourced below. The linkage disequilibrium (LD) matrix of genetic variants in the *SOST* region (100KB downstream and 125KB upstream[^1] of *SOST*) is computed using data from 1000 Genomes [@genomes2015].  
+
+```{r}
+#| label: setup
+#| warning: false
+#| message: false
+#| echo: false
+
+# Libraries
+library(data.table)
+library(dplyr)
+library(reactable)
+
+# Functions
+source("./scripts/00_functions.R")
+```
+
+## Datasets
+
+### Sclerostin pQTLs
+
+The *cis* sclerostin pQTLs in [@tbl-pqtls] were extracted from Supplementary Table 2 in @zheng2023.
+
+```{r}
+#| label: pqtls
+#| echo: false
+
+pqtls <- fread(
+  "./data/00_data_pqtls.tsv",
+  header = TRUE, data.table = FALSE, sep = "\t"
+)
+```
+
+```{r}
+#| label: tbl-pqtls
+#| tbl-cap: cis pQTLs
+#| echo: false
+
+empty_kable()
+
+pqtls %>%
+  reactable(
+    searchable = TRUE,
+    pagination = TRUE,
+    bordered = TRUE,
+    striped = TRUE,
+    columns = list(
+      rsid = colDef(name = "rsID", minWidth = 100, align = "left"),
+      chr = colDef(name = "Chr", minWidth = 50, align = "left"),
+      pos = colDef(name = "Position", minWidth = 90, align = "left"),
+      ea = colDef(name = "Effect allele", minWidth = 80, align = "left"),
+      oa = colDef(name = "Other allele", minWidth = 80, align = "left"),
+      eaf = colDef(
+        name = "Effect allele frequency", minWidth = 100, align = "left"
+      ),
+      beta = colDef(name = "Effect size", minWidth = 80, align = "left"),
+      se = colDef(name = "Standard error", minWidth = 80, align = "left"),
+      pvalue = colDef(name = "P-value", minWidth = 80, align = "left"),
+      n = colDef(name = "Number of samples", minWidth = 100, align = "left")
+    )
+  )
+```
+
+<br style="line-height: 5px" />
+
+```{r}
+#| label: download-pqtls
+#| echo: false
+
+pqtls %>%
+  downloadthis::download_this(
+    output_name = "pqtls",
+    output_extension = ".xlsx",
+    button_label = "Download as xlsx",
+    button_type = "primary",
+    has_icon = TRUE,
+    icon = "fa fa-save"
+  )
+```
+
+<details>
+<summary>README</summary>
+
+* `rsid` - rsID  
+* `chr` - chromosome  
+* `pos` - position (build 37)  
+* `ea` - effect allele  
+* `oa` - other allele  
+* `eaf` - effect allele frequency  
+* `beta` - effect size
+* `se` - standard error of effect size
+* `pvalue` - *p*-pvalue
+* `n` - number of samples  
+
+</details>
+
+### Study information
+
+The GWAS studies used in the analyses[^2] are presented in [@tbl-gwas-study-info].[^3]  
+
+```{r}
+#| label: gwas-study-info
+#| echo: false
+
+studies <- fread(
+  "./data/00_data_studies.tsv",
+  header = TRUE, data.table = FALSE, sep = "\t"
+)
+```
+
+```{r}
+#| label: tbl-gwas-study-info
+#| tbl-cap: GWAS study information
+#| echo: false
+
+empty_kable()
+
+studies %>%
+  mutate(
+    id = if_else(
+      source %in% c("CHARGE", "DIAGRAM"),
+      paste0(
+        "<a href='",
+        link,
+        "'>",
+        id,
+        "</a>"
+      ),
+      id
+    ),
+    id = if_else(
+      source %in% c("GCST", "GEFOS", "MEGASTROKE"),
+      paste0(
+        "<a href='https://www.ebi.ac.uk/gwas/studies/",
+        id,
+        "/'>",
+        id,
+        "</a>"
+      ),
+      id
+    ),
+    id = if_else(
+      source %in% c("PUKB"),
+      paste0(
+        "<a href='https://pan.ukbb.broadinstitute.org/downloads'>",
+        id,
+        "</a>"
+      ),
+      id
+    ),
+    id = if_else(
+      source %in% c("UKB"),
+      paste0(
+        "<a href='http://www.nealelab.is/uk-biobank'>",
+        id,
+        "</a>"
+      ),
+      id
+    ),
+    pmid = paste0(
+      "<a href='https://pubmed.ncbi.nlm.nih.gov/",
+      pmid,
+      "'>",
+      pmid,
+      "</a>"
+    )
+  ) %>%
+  select(id, pmid, trait, abbr, ancestry, n, n_cases, n_controls) %>%
+  reactable(
+    searchable = TRUE,
+    pagination = TRUE,
+    bordered = TRUE,
+    striped = TRUE,
+    columns = list(
+      id = colDef(
+        name = "Dataset ID", minWidth = 100, align = "left", html = TRUE
+      ),
+      pmid = colDef(
+        name = "PubMed ID", minWidth = 80, align = "left", html = TRUE
+      ),
+      trait = colDef(name = "Phenotype", minWidth = 140, align = "left"),
+      abbr = colDef(name = "Abbreviation", minWidth = 100, align = "left"),
+      ancestry = colDef(name = "Ancestry", minWidth = 100, align = "left"),
+      n = colDef(name = "Number of samples", minWidth = 80, align = "left"),
+      n_cases = colDef(name = "Number of cases", minWidth = 80, align = "left"),
+      n_controls = colDef(
+        name = "Number of controls", minWidth = 80, align = "left"
+      )
+    )
+  )
+```
+
+```{r}
+#| label: download-gwas-studies
+#| echo: false
+
+studies %>%
+  downloadthis::download_this(
+    output_name = "studies",
+    output_extension = ".xlsx",
+    button_label = "Download as xlsx",
+    button_type = "primary",
+    has_icon = TRUE,
+    icon = "fa fa-save"
+  )
+```
+
+<details>
+<summary>README</summary>
+
+* `id` - dataset ID  
+* `source` - source of dataset  
+* `pmid` - PubMed ID  
+* `author` - author of study  
+* `link` - link to dataset  
+* `trait` - phenotype  
+* `abbr` - abbreviation  
+* `ancestry` - ancestry of study  
+* `n` - number of samples  
+* `n_cases` - number of cases  
+* `n_controls` - number of controls  
+* `unit` - unit of analysis (`IRNT` = inverse rank normal transformation)  
+* `flag` - flag if the dataset (or equivalent) was used by @zheng2023 (`Y` = yes, `N` = no)  
+
+Citations: @xue2018; @mahajan2022; @hartiala2021; @van2018; @aragam2022; @sudlow2015; @malik2018; @mishra2022; @malhotra2019; @morris2019  
+
+</details>
+
+## Data processing
+
+### LD matrix
+
+The LD correlation matrix of the *SOST* region (100KB downstream and 125KB upstream of *SOST*) for the European samples from 1000 Genomes Phase 3 V5b [@genomes2015] is computed using the `01_data_ldmat.R` R script located in the `scripts` folder.  
+
+```{r}
+#| label: data-ld
+#| eval: false
+
+source("./scripts/01_data_ldmat.R")
+```
+
+The output of the script is an `Rda` file saved in the `data` folder as `01_data_ld_mat.Rda` which contains two objects:  
+
+* `ld_snp` - a `data.frame` of variant information with the columns:  
+  * `rsid` - rsID  
+  * `chr` - chromosome  
+  * `pos` - position (build 37)  
+  * `ref` - reference allele  
+  * `alt` - alternate allele  
+  * `af` - allele frequency of the alternate allele  
+
+* `ld_mat` - a `matrix` of variant correlations ($r$ not $r^2$)  
+
+### GWAS data
+
+#### *SOST* region
+
+The *SOST* region is extracted and harmonized from the GWAS datasets using the `02_data_gwas_sos_region.R` R script located in the `scripts` folder. The pQTL dataset is also harmonized using this script. The effect allele is aligned to the alternate allele in `ld_snps`.  
+
+```{r}
+#| label: data-gwas-region
+#| eval: false
+
+source("./scripts/02_data_gwas_region.R")
+```
+
+The output of the script is an `Rda` file saved in the `data` folder as `02_data_gwas_sost_region.Rda` which contains three objects:  
+
+* `gwas` - a `data.frame` of GWAS results from the studies above with the columns:  
+  * `rsid` - rsID  
+  * `chr` - chromosome  
+  * `pos` - position (build 37)  
+  * `ref` - reference allele  
+  * `alt` - alternate allele (effect allele)  
+  * `af` - allele frequency of the alternate allele  
+  * `beta` - effect size  
+  * `se` - standard error  
+  * `pvalue` - *p*-value  
+
+* `pqtls` - a `data.frame` of pQTL results with the columns:  
+  * `rsid` - rsID  
+  * `chr` - chromosome  
+  * `pos` - position (build 37)  
+  * `ref` - reference allele  
+  * `alt` - alternate allele (effect allele)  
+  * `af` - allele frequency of the alternate allele  
+  * `beta` - effect size  
+  * `se` - standard error  
+  * `pvalue` - *p*-value  
+
+* `studies` - a `data.frame` of GWAS study information with the columns:  
+  * `id` - dataset ID  
+  * `source` - source of dataset  
+  * `pmid` - PubMed ID  
+  * `author` - author of study  
+  * `trait` - phenotype  
+  * `abbr` - abbreviation  
+  * `ancestry` - ancestry of study  
+  * `n` - number of samples  
+  * `n_cases` - number of cases  
+  * `n_controls` - number of controls  
+  * `unit` - unit of analysis (`IRNT` = inverse rank normal transformation)  
+  * `flag` - flag if the dataset (or equivalent) was used by @zheng2023 (`Y` = yes, `N` = no)  
+
+#### pQTLs
+
+The GWAS results for the sclerostin pQTLs are extracted from `02_data_gwas_sost_region` using the `03_data_gwas_pqtls.R` R script located in the `scripts` folder. The associations of rs1107747 and rs4793023 with HDL cholesterol and triglycerides are adjusted for rs72836567 using the COJO methodology [@yang2012] to account for the effects of the *CD300LG* gene (see [@sec-ldmat] for further details). No good proxy variants ($r^2 \geq$ 0.8) were identified for the missing sclerostin pQTLs in GCST006867.  
+
+```{r}
+#| label: data-gwas-pqtls
+#| eval: false
+
+source("./scripts/03_data_gwas_pqtls.R")
+```
+
+The output of the script is an `Rda` file saved in the `data` folder as `03_data_gwas_pqtls.Rda` which contains three objects:  
+
+* `gwas` - a `data.frame` of GWAS results from the studies above with the columns:  
+  * `rsid` - rsID  
+  * `chr` - chromosome  
+  * `pos` - position (build 37)  
+  * `ref` - reference allele  
+  * `alt` - alternate allele (effect allele)  
+  * `af` - allele frequency of the alternate allele  
+  * `beta` - effect size  
+  * `se` - standard error  
+  * `pvalue` - *p*-value  
+
+* `pqtls` - a `data.frame` of pQTL results with the columns:  
+  * `rsid` - rsID  
+  * `chr` - chromosome  
+  * `pos` - position (build 37)  
+  * `ref` - reference allele  
+  * `alt` - alternate allele (effect allele)  
+  * `af` - allele frequency of the alternate allele  
+  * `beta` - effect size  
+  * `se` - standard error  
+  * `pvalue` - *p*-value  
+
+* `studies` - a `data.frame` of GWAS study information with the columns:  
+  * `id` - dataset ID  
+  * `source` - source of dataset  
+  * `pmid` - PubMed ID  
+  * `author` - author of study  
+  * `trait` - phenotype  
+  * `abbr` - abbreviation  
+  * `ancestry` - ancestry of study  
+  * `n` - number of samples  
+  * `n_cases` - number of cases  
+  * `n_controls` - number of controls  
+  * `unit` - unit of analysis (`IRNT` = inverse rank normal transformation)  
+  * `flag` - flag if the dataset (or equivalent) was used by @zheng2023 (`Y` = yes, `N` = no)  
+
+[^1]: An extra 25KB was added upstream to ensure that all relevant *CD300LG* variants are included in the region.  
+[^2]: The ischemic and cardioembolic stroke GWAS results from METASTROKE [@malik2016] used by @zheng2023 were replaced with those from MEGASTROKE [@malik2018] and the UK Biobank hypertension GWAS results from [OpenGWAS](https://gwas.mrcieu.ac.uk/datasets/ukb-b-14057/) used by @zheng2023 were replaced with those from [Pan-UKBB](https://pan.ukbb.broadinstitute.org/downloads) due to licensing restrictions. The GWAS of coronary artery calcification was not available (either publicly or via application) at the time of this analysis [@kavousi2022].  
+[^3]: Since @zheng2023 use trans-ethnic GWAS results, we followed suit. In all of the trans-ethnic analyses the majority of the samples were from European ancestry. There was no material difference in the results if we restricted the analyses to analysing Europeans only where possible [@sec-mr-eur].  

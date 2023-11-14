@@ -1,0 +1,473 @@
+# Sensitivity analyses
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+#| echo: false
+
+# Libraries
+library(data.table)
+library(dplyr)
+library(geni.plots)
+library(reactable)
+library(ggiraph)
+
+# Functions
+source("./scripts/00_functions.R")
+```
+
+## European only analyses {#sec-mr-eur}
+
+The same Mendelian randomization analyses as in [@sec-mr] were performed using European only samples (where available).  
+```{r}
+#| label: mr-analyses-eur
+
+# MR analyses
+mr_results <- fread(
+  "./data/00_data_sensitivity_eur_mr.tsv",
+  header = TRUE, data.table = FALSE, sep = "\t"
+)
+mr_studies <- fread(
+  "./data/00_data_sensitivity_eur_mr_studies.tsv",
+  header = TRUE, data.table = FALSE, sep = "\t"
+)
+
+# MR results
+mr_results <- mr_studies %>%
+  select(id, pmid, trait, n, n_cases) %>%
+  inner_join(
+    x = .,
+    y = mr_results,
+    by = "id"
+  )
+```
+
+```{r}
+#| label: download-mr-results-eur
+#| echo: false
+
+mr_results %>%
+  downloadthis::download_this(
+    output_name = "mr",
+    output_extension = ".xlsx",
+    button_label = "Download as xlsx",
+    button_type = "primary",
+    has_icon = TRUE,
+    icon = "fa fa-save"
+  )
+```
+
+<details>
+<summary>README</summary>
+
+* `id` - dataset ID  
+* `pmid` - PubMed ID  
+* `trait` - phenotype  
+* `n` - number of samples  
+* `n_cases` - number of cases  
+* `model` - MR model  
+* `n_snps` - number of SNPs  
+* `beta` - MR effect size (per SD lower sclerostin)  
+* `se` - MR standard error  
+* `pvalue` - MR *p*-value  
+
+</details>
+
+### Results
+
+::: {.panel-tabset}
+
+#### Associations
+
+```{r}
+#| label: tbl-mr-results-eur
+#| tbl-cap: MR results of the effect of per SD lower sclerostin on cardiovascular events and risk factors
+#| echo: false
+
+empty_kable()
+
+mr_results <- mr_results %>%
+  mutate(
+    model_id = if_else(
+      model == "2_cis_pqtls",
+      0,
+      1
+    )
+  ) %>%
+  arrange(model_id) %>%
+  select(-c(model_id))
+
+mr_results %>%
+  mutate(
+    model = gsub("_", " ", model),
+    lci = beta - 1.96 * se,
+    uci = beta + 1.96 * se,
+    est_ci = if_else(
+      is.na(n_cases),
+      sprintf(
+        "%.3f (%.3f, %.3f)",
+        round(beta, 3), round(lci, 3), round(uci, 3)
+      ),
+      sprintf(
+        "%.3f (%.3f, %.3f)",
+        round(exp(beta), 3), round(exp(lci), 3), round(exp(uci), 3)
+      )
+    ),
+    pvalue = signif(pvalue, 3)
+  ) %>%
+  select(id, trait, model, n_snps, est_ci, pvalue) %>%
+  reactable(
+    searchable = TRUE,
+    pagination = TRUE,
+    bordered = TRUE,
+    striped = TRUE,
+    columns = list(
+      id = colDef(name = "Dataset ID", minWidth = 100, align = "left"),
+      trait = colDef(name = "Phenotype", minWidth = 160, align = "left"),
+      model = colDef(name = "Model", minWidth = 80, align = "left"),
+      n_snps = colDef(name = "N SNPs", minWidth = 70, align = "left"),
+      est_ci = colDef(
+        name = "OR / Effect (95% CI)", minWidth = 120, align = "left",
+        style = function(value, index) {
+          if (is.na(mr_results$n_cases[index])) {
+            colour <- "darkgreen"
+          } else {
+            colour <- "darkblue"
+          }
+          list(color = colour)
+        }
+      ),
+      pvalue = colDef(name = "P-value", minWidth = 70, align = "left")
+    )
+  )
+```
+
+`r fontawesome::fa(name = "fas fa-square", fill = "darkgreen", height = "1em")` : Effect (in SD)  
+`r fontawesome::fa(name = "fas fa-square", fill = "darkblue", height = "1em")` : Odds ratio  
+
+#### QQ plots
+
+::: {.panel-tabset}
+
+##### Original datasets
+
+::: {.panel-tabset .nav-pills}
+
+###### 2 *cis* pQTLs
+
+```{r}
+#| label: fig-qq-org-2-pqtls-eur
+#| fig-cap: QQ plot of MR results (2 *cis* pQTLs) for the original datasets
+
+mr_results %>%
+  filter(model == "2_cis_pqtls") %>%
+  inner_join(
+    x = select(mr_studies, id, flag),
+    y = .,
+    by = "id"
+  ) %>%
+  filter(flag == "Y") %>%
+  distinct(trait, .keep_all = TRUE) %>%
+  qq_plot()
+```
+
+###### 5 *cis* pQTLs
+
+```{r}
+#| label: fig-qq-org-5-pqtls-eur
+#| fig-cap: QQ plot of MR results (5 *cis* pQTLs) for the original datasets
+
+mr_results %>%
+  filter(model == "5_cis_pqtls") %>%
+  inner_join(
+    x = select(mr_studies, id, flag),
+    y = .,
+    by = "id"
+  ) %>%
+  filter(flag == "Y") %>%
+  distinct(trait, .keep_all = TRUE) %>%
+  qq_plot()
+```
+
+:::
+
+##### Additional datasets
+
+::: {.panel-tabset .nav-pills}
+
+###### 2 *cis* pQTLs
+
+```{r}
+#| label: fig-qq-add-2-pqtls-eur
+#| fig-cap: QQ plot of MR results (2 *cis* pQTLs) for the additional datasets
+
+mr_results %>%
+  filter(model == "2_cis_pqtls") %>%
+  inner_join(
+    x = select(mr_studies, id, flag),
+    y = .,
+    by = "id"
+  ) %>%
+  filter(flag == "N") %>%
+  qq_plot()
+```
+
+###### 5 *cis* pQTLs
+
+```{r}
+#| label: fig-qq-add-5-pqtls-eur
+#| fig-cap: QQ plot of MR results (5 *cis* pQTLs) for the additional datasets
+
+mr_results %>%
+  filter(model == "5_cis_pqtls") %>%
+  inner_join(
+    x = select(mr_studies, id, flag),
+    y = .,
+    by = "id"
+  ) %>%
+  filter(flag == "N") %>%
+  qq_plot()
+```
+
+:::
+
+:::
+
+:::
+
+## UK Biobank sclerostin pQTLs {#sec-mr-ukbb}
+
+Genetic variant associations with circulating sclerostin in the *SOST* region from UK Biobank using the Olink platform were obtained from @sun2023. Sclerostin pQTLs in *cis* of *SOST* (±100KB) were defined using LD clumping using LDlinkR setting $r^2 < 0.2$ [@myers2020]. Three sclerostin pQTLs were identified rs1513671, rs80107551 (this variant was included in the @zheng2023 sclerostin pQTLs) and rs865429. These sclerostin pQTLs were used to perform the same Mendelian randomization analyses as in [@sec-mr] using the @zheng2023 sclerostin pQTLs.  
+
+```{r}
+#| label: pqtls-ukbb
+#| eval: false
+
+source("./scripts/04_data_ukbb_pqtls_region.R")
+source("./scripts/05_data_ukbb_pqtls.R")
+source("./scripts/06_data_gwas_ukbb_pqtls.R")
+```
+
+### Data
+
+```{r}
+#| label: data-ukbb
+
+# Data
+load("./data/01_data_ldmat.Rda")
+load("./data/06_data_gwas_ukbb_pqtls.Rda")
+
+# GWAS
+gwas <- gwas %>%
+  filter(!(id %in% c("GCST006979", "GCST006980")))
+```
+
+### Analyses
+
+Mendelian randomization (MR) analyses of circulating sclerostin against cardiovascular events and risk factors were performed using the datasets in [@tbl-gwas-study-info]. The *cis* sclerostin pQTLs from UK Biobank were used as the genetic instruments. Since the sclerostin pQTLs are correlated, the generalized inverse-weighted method [@burgess2016] was used to perform the MR analyses.  
+
+```{r}
+#| label: mr-analyses-ukbb
+
+# MR analyses
+mr_results <- tibble()
+for (id in unique(gwas$id)) {
+
+  ## MR data
+
+  ### GWAS
+  mr_data <- gwas %>%
+    filter(id == !!id) %>%
+    inner_join(
+      x = pqtls,
+      y = .,
+      by = c("rsid", "chr", "pos", "ref", "alt")
+    ) %>%
+    relocate(id, .before = rsid)
+
+  ### LD matrix
+  mr_corr <- ld_mat[
+    match(mr_data$rsid, rownames(ld_mat)),
+    match(mr_data$rsid, rownames(ld_mat)),
+    drop = FALSE
+  ]
+  if (any(mr_data$rsid != rownames(mr_corr)))
+    stop("genetic varaints are not aligned between the GWAS data and the LD matrix")
+
+  ## MR analysis
+
+  ### Input
+  mr_inputs <- MendelianRandomization::mr_input(
+    bx = mr_data$beta.x,
+    bxse = mr_data$se.x,
+    by = mr_data$beta.y,
+    byse = mr_data$se.y,
+    correlation = mr_corr,
+    snps = mr_data$rsid
+  )
+
+  ### Analysis
+  mr_analysis <- MendelianRandomization::mr_ivw(
+    mr_inputs,
+    model = "fixed",
+    correl = TRUE
+  )
+  mr_analysis <- tibble(
+    id = !!id,
+    model = "UKBB cis pQTLs",
+    n_snps = !!nrow(mr_data),
+    beta = -1 * !!round(mr_analysis$Estimate, 6), # per lower SD sclerostin
+    se = !!round(mr_analysis$StdError, 6),
+    pvalue = !!signif(mr_analysis$Pvalue, 4)
+  )
+
+  ### Results
+  mr_results <- mr_results %>%
+    bind_rows(mr_analysis)
+
+}
+
+# MR results
+mr_results <- studies %>%
+  select(id, pmid, trait, n, n_cases) %>%
+  inner_join(
+    x = .,
+    y = mr_results,
+    by = "id"
+  )
+```
+
+
+```{r}
+#| label: download-mr-results-ukbb
+#| echo: false
+
+mr_results %>%
+  downloadthis::download_this(
+    output_name = "mr",
+    output_extension = ".xlsx",
+    button_label = "Download as xlsx",
+    button_type = "primary",
+    has_icon = TRUE,
+    icon = "fa fa-save"
+  )
+```
+
+<details>
+<summary>README</summary>
+
+* `id` - dataset ID  
+* `pmid` - PubMed ID  
+* `trait` - phenotype  
+* `n` - number of samples  
+* `n_cases` - number of cases  
+* `model` - MR model  
+* `n_snps` - number of SNPs  
+* `beta` - MR effect size (per SD lower sclerostin)  
+* `se` - MR standard error  
+* `pvalue` - MR *p*-value  
+
+</details>
+
+### Results
+
+::: {.panel-tabset}
+
+#### Associations
+
+```{r}
+#| label: tbl-mr-results-ukbb
+#| tbl-cap: MR results of the effect of per SD lower sclerostin on cardiovascular events and risk factors
+#| echo: false
+
+empty_kable()
+
+mr_results %>%
+  mutate(
+    model = gsub("_", " ", model),
+    lci = beta - 1.96 * se,
+    uci = beta + 1.96 * se,
+    est_ci = if_else(
+      is.na(n_cases),
+      sprintf(
+        "%.3f (%.3f, %.3f)",
+        round(beta, 3), round(lci, 3), round(uci, 3)
+      ),
+      sprintf(
+        "%.3f (%.3f, %.3f)",
+        round(exp(beta), 3), round(exp(lci), 3), round(exp(uci), 3)
+      )
+    ),
+    pvalue = signif(pvalue, 3)
+  ) %>%
+  select(id, trait, model, n_snps, est_ci, pvalue) %>%
+  reactable(
+    searchable = TRUE,
+    pagination = TRUE,
+    bordered = TRUE,
+    striped = TRUE,
+    columns = list(
+      id = colDef(name = "Dataset ID", minWidth = 100, align = "left"),
+      trait = colDef(name = "Phenotype", minWidth = 160, align = "left"),
+      model = colDef(name = "Model", minWidth = 80, align = "left"),
+      n_snps = colDef(name = "N SNPs", minWidth = 70, align = "left"),
+      est_ci = colDef(
+        name = "OR / Effect (95% CI)", minWidth = 120, align = "left",
+        style = function(value, index) {
+          if (is.na(mr_results$n_cases[index])) {
+            colour <- "darkgreen"
+          } else {
+            colour <- "darkblue"
+          }
+          list(color = colour)
+        }
+      ),
+      pvalue = colDef(name = "P-value", minWidth = 70, align = "left")
+    )
+  )
+```
+
+`r fontawesome::fa(name = "fas fa-square", fill = "darkgreen", height = "1em")` : Effect (in SD)  
+`r fontawesome::fa(name = "fas fa-square", fill = "darkblue", height = "1em")` : Odds ratio  
+
+#### QQ plots
+
+::: {.panel-tabset}
+
+##### Original datasets
+
+```{r}
+#| label: fig-qq-org-ukbb
+#| fig-cap: QQ plot of MR results for the original datasets
+
+mr_results %>%
+  inner_join(
+    x = select(studies, id, flag),
+    y = .,
+    by = "id"
+  ) %>%
+  filter(flag == "Y") %>%
+  distinct(trait, .keep_all = TRUE) %>%
+  qq_plot()
+```
+
+##### Additional datasets
+
+```{r}
+#| label: fig-qq-add-ukbb
+#| fig-cap: QQ plot of MR results or the additional datasets
+
+mr_results %>%
+  inner_join(
+    x = select(studies, id, flag),
+    y = .,
+    by = "id"
+  ) %>%
+  filter(flag == "N") %>%
+  qq_plot()
+```
+
+:::
+
+:::

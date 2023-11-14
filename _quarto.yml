@@ -13,6 +13,16 @@ book:
   date: today
   chapters:
     - index.qmd
+    - 02_data.qmd
+    - 03_ld_matrix.qmd
+    - 04_sost_assoc.qmd
+    - 05_pqtl_assoc.qmd
+    - 06_mr.qmd
+    - 07_coloc.qmd
+    - 08_sensitivity.qmd
+    - 09_references.qmd
+    - 10_ackowledgements.qmd
+    - 11_acroynms.qmd
   repo-url: https://github.com/jrs95/sclerostin_pqtl_mr
   repo-actions: none
 
@@ -33,6 +43,9 @@ book:
 include-in-header:
   - text: |
       <link rel = "shortcut icon" href = "images/geni_favicon.png" />
+
+bibliography: 09_references.bib
+csl: 09_references.csl
 
 format:
   html:

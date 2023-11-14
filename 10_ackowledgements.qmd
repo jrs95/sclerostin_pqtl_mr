@@ -1,0 +1,15 @@
+# Acknowledgements {.unnumbered}
+
+## MEGASTOKE
+The MEGASTROKE project received funding from sources specified at [http://www.megastroke.org/acknowledgments.html](http://www.megastroke.org/acknowledgments.html).
+
+## CHARGE
+The GWAS results for abdominal aortic calcification were downloaded from CHARGE via dbGaP (accession: [phs000930.v10.p1](https://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/study.cgi?study_id=phs000930.v10.p1); application: #35610).  
+
+The authors acknowledge the essential role of the Cohorts for Heart and Aging Research in Genomic Epidemiology (CHARGE) Consortium [@psaty2009] in the development and support of this research (see [http://web.chargeconsortium.com](http://web.chargeconsortium.com) for more details). The authors thank the investigators, the staff, and the participants of each contributing cohort in the CHARGE consortium publication from which these results were obtained.  
+
+Support for the CHARGE consortium infrastructure was provided by the NIH grant R01 HL105756 (B Psaty). Support for establishing and curation of the dbGaP CHARGE Summary site (phs000930) was provided by the University of Virginia.  
+
+## Pan-UKBB
+Pan-UKB team. [https://pan.ukbb.broadinstitute.org](https://pan.ukbb.broadinstitute.org). 2020.
+

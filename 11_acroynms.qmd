@@ -1,0 +1,9 @@
+# Acronyms {.unnumbered}
+
+* GWAS - genome-wide association study  
+* LD - linkage disequilibrium  
+* MR - Mendelian randomization  
+* OR - odds ratio  
+* pQTL - protein quantitative trait loci  
+* QQ - quantile-quantile  
+* SD - standard deviation  

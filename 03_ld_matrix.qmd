@@ -1,0 +1,94 @@
+# LD matrix
+
+```{r}
+#| label: setup
+#| warning: false
+#| message: false
+#| echo: false
+
+library(data.table)
+library(dplyr)
+```
+
+## Data
+
+```{r}
+#| label: data
+
+# pQTLs
+pqtls <- fread(
+  "./data/00_data_pqtls.tsv",
+  header = TRUE, data.table = FALSE, sep = "\t"
+)
+
+# LD matrix
+load("./data/01_data_ldmat.Rda")
+```
+
+## LD matrix {#sec-ldmat}
+
+::: {.panel-tabset}
+
+### Sclerostin pQTLs
+
+```{r}
+#| label: fig-ld-mat-pqtls
+#| fig-cap: LD matrix sclerostin pQTLs
+#| out-width: 80%
+
+# LD matrix for pQTLs
+ld_mat_pqtls <- ld_mat[
+  match(pqtls$rsid, rownames(ld_mat)),
+  match(pqtls$rsid, colnames(ld_mat)),
+  drop = FALSE
+]
+
+# Compute r2 from r
+ld_mat_pqtls <- round(ld_mat_pqtls^2, 3)
+
+# Heatmap
+heatmaply::heatmaply(
+  ld_mat_pqtls,
+  label_names = c("Variant 1", "Variant 2", "r2"),
+  row_dend_left = TRUE,
+  key.title = "r2"
+)
+```
+
+### Sclerostin pQTLs and *CD300LG* variants
+
+Since *CD300LG* located nearby to *SOST* is known to be associated with HDL cholesterol and triglycerides, we examined whether any of the sclerostin pQTLs are in LD with either rs72836561 (a functional variant in *CD300LG* known to be associated with HDL cholesterol and triglycerides [@surakka2015]) and / or rs72836567 (the top associated variant with *CD300LG* expression in GTEx [@gtex2020]). Two of the sclerostin pQTLs (rs1107747 & rs4793023) are mildly correlated ($r^2$ > 0.05) with rs72836567. So, for these sclerostin pQTLs we used rs72836567 to adjust out any residual association with HDL cholesterol and triglycerides due to the effects of the *CD300LG* gene [@yang2012].  
+
+```{r}
+#| label: fig-ld-mat-pqtls-cd300lg
+#| fig-cap: LD matrix sclerostin pQTLs and *CD300LG* variants
+#| out-width: 60%
+
+# LD matrix for pQTLs and CD300LG variants
+ld_mat_pqtls_cd300lg <- ld_mat[
+  match(c(pqtls$rsid, "rs72836561", "rs72836567"), rownames(ld_mat)),
+  match(c(pqtls$rsid, "rs72836561", "rs72836567"), colnames(ld_mat)),
+  drop = FALSE
+]
+
+# Compute r2 from r
+ld_mat_pqtls_cd300lg <- round(ld_mat_pqtls_cd300lg^2, 3)
+
+# CD300LG correlations
+ld_mat_pqtls_cd300lg <- ld_mat_pqtls_cd300lg[
+  pqtls$rsid,
+  c("rs72836561", "rs72836567"),
+  drop = FALSE
+]
+
+# Heatmap
+heatmaply::heatmaply(
+  ld_mat_pqtls_cd300lg,
+  dendrogram = "none",
+  label_names = c("Sclerostin pQTL", "CD300LG variant", "r2"),
+  limits = c(0, 1),
+  key.title = "r2"
+)
+```
+
+:::

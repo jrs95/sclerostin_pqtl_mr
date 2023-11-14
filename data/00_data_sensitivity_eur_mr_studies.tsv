@@ -1,0 +1,25 @@
+id	pmid	author	trait	abbr	ancestry	n	n_cases	n_controls	unit	flag
+GCST011365	33532862	Hartiala JA	Myocardial infarction	MI	Trans-ethnic	639221	61505	577716	log OR	Y
+GCST005194	29212778	van der Harst P	Coronary artery disease	CAD	Trans-ethnic	547261	122733	424528	log OR	Y
+GCST90132314	36474045	Aragam KG	Coronary artery disease	CAD	European	1165690	181522	984168	log OR	N
+GCST006908	29531354	Malik R	Ischemic stroke	IS	European	440328	34217	406111	log OR	Y
+GCST90104540	36180795	Mishra A	Ischemic stroke	IS	European	1296908	62100	1234808	log OR	N
+GCST006910	29531354	Malik R	Cardioembolic stroke	CES	European	413304	7193	406111	log OR	Y
+GCST90104541	36180795	Mishra A	Cardioembolic stroke	CES	European	1245612	10804	1234808	log OR	N
+GCST90104542	36180795	Mishra A	Large artery stroke	LAS	European	1241207	6399	1234808	log OR	N
+GCST90104543	36180795	Mishra A	Small vessel stroke	SVS	European	1241619	6811	1234808	log OR	N
+GCST006867	30054458	Xue A	Type 2 diabetes	T2D	European	659316	62892	596424	log OR	Y
+GCST90132184	35551307	Mahajan A	Type 2 diabetes	T2D	European	933970	80154	853816	log OR	N
+UKBB200021065EUR	25826379	Pan-UKBB	Hypertension	HTN	European	420473	109307	311166	log OR	Y
+PHS000930AAC	31659325	Malhotra R	Abdominal aortic calcification	AAC	European	9417			SD	Y
+UKBB30780	25826379	Neale B	LDL cholesterol	LDL	European	343621			IRNT	Y
+UKBB30760	25826379	Neale B	HDL cholesterol	HDL	European	315133			IRNT	Y
+UKBB30870	25826379	Neale B	Triglycerides	TG	European	343992			IRNT	Y
+UKBB30630	25826379	Neale B	Apolipoprotein A-I	APOA	European	313387			IRNT	Y
+UKBB30640	25826379	Neale B	Apolipoprotein B	APOB	European	342590			IRNT	Y
+IEUA1108	26935894	Malik R	Ischemic stroke	IS	Trans-ethnic	29633	10307	19326	log OR	Y
+IEUA1109	26935894	Malik R	Cardioembolic stroke	CES	Trans-ethnic	21185	1859	19326	log OR	Y
+IEUA1110	26935894	Malik R	Large vessel disease	LVD	Trans-ethnic	21143	1817	19326	log OR	Y
+IEUA1111	26935894	Malik R	Small vessel disease	SVD	Trans-ethnic	20675	1349	19326	log OR	Y
+UKBB14057	25826379	Elsworth B	Hypertension	HTN	European	462933	119731	343202	log OR	Y
+PHS000930CAC		Kavousi M	Coronary artery calcification	CAC	Trans-ethnic	26909			SD	Y
