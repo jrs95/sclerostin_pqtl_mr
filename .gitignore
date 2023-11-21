@@ -1,2 +1,4 @@
 /.quarto/
 .lintr
+.Rproj.user
+*.Rproj
