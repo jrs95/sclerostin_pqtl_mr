@@ -487,7 +487,7 @@ gwas_impute <- function(data, snpinfo, corr, n, n_cases = NULL) {
     stop("all z-statistics are missing")
 
   ## Correlation
-  if (any(rownames(corr) != gwas$rsid))
+  if (nrow(corr) != nrow(gwas) || any(rownames(corr) != gwas$rsid))
     stop(
       "the variants in the correlation matrix and the GWAS dataset are not ",
       "the same"
