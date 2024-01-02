@@ -453,8 +453,12 @@ gwas_sumstats <- function(data = NULL, file = NULL, id,
 gwas_impute <- function(data, snpinfo, corr, n, n_cases = NULL) {
 
   # Data
+
+  ## GWAS
   gwas <- data %>%
     dplyr::select(-rsid) %>%
+    dplyr::arrange(as.numeric(pvalue)) %>%
+    dplyr::slice(1) %>%
     dplyr::mutate(z = beta / se) %>%
     dplyr::left_join(
       x = snpinfo,
@@ -477,8 +481,20 @@ gwas_impute <- function(data, snpinfo, corr, n, n_cases = NULL) {
     ) %>%
     dplyr::select(rsid, chr, pos, ref, alt, af, af_study, z, se)
 
+  if (any(duplicated(gwas$rsid)))
+    stop("rsIDs have to be unique")
+  if (all(is.na(gwas$z)))
+    stop("all z-statistics are missing")
+
   ## Correlation
+  if (any(rownames(corr) != gwas$rsid))
+    stop(
+      "the variants in the correlation matrix and the GWAS dataset are not ",
+      "the same"
+    )
   r <- corr[rownames(corr) == gwas$rsid[!is.na(gwas$z)], , drop = TRUE]
+  if (!is.vector(r) || length(r) != nrow(gwas))
+    stop("r is not a vector or does not have the same length as gwas has rows")
 
   # Impute statistics
 
