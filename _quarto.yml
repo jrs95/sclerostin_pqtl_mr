@@ -25,6 +25,7 @@ book:
     - 11_acroynms.qmd
   repo-url: https://github.com/jrs95/sclerostin_pqtl_mr
   repo-actions: none
+  site-url: https://jrs95.github.io/sclerostin_pqtl_mr/
 
   page-footer:
     left: "[![](https://img.shields.io/badge/Code-GPL--3-BD0000.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![](https://img.shields.io/badge/Data-CC--BY--4.0-00AFD4.svg)](https://creativecommons.org/licenses/by/4.0/)"
