@@ -119,13 +119,15 @@ filter_vcf <- function(data, samples_file, ancestry = "EUR", maf = 0.01,
     input = samples_file, header = TRUE, data.table = FALSE,
     fill = TRUE, sep = "\t", showProgress = FALSE
   )
-  samples <- samples %>%
+
+  # Sample exclusions
+  samples_excl <- samples %>%
     dplyr::filter(super_pop != !!ancestry) %>%
     dplyr::pull(sample)
 
   # Results
   results <- data %>%
-    dplyr::select(-any_of(samples)) %>%
+    dplyr::select(-any_of(samples_excl)) %>%
     dplyr::filter(!grepl(",", REF) & !grepl(",", ALT)) %>%
     dplyr::mutate(
       INFO = sub(paste0(".*", ancestry, "_AF="), "AF=", INFO),
