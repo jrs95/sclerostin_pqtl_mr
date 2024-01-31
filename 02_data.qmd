@@ -1,6 +1,6 @@
 # Data
 
-The sclerostin pQTLs and GWAS results for are processed using the scripts sourced below. The linkage disequilibrium (LD) matrix of genetic variants in the *SOST* region (100KB downstream and 125KB upstream[^1] of *SOST*) is computed using data from 1000 Genomes [@genomes2015].  
+The sclerostin pQTLs and GWAS results for are processed using the scripts sourced below. The linkage disequilibrium (LD) matrix of genetic variants in the *SOST* region (100KB downstream and 125KB upstream[^1] of *SOST*) is computed using data from 1000 Genomes [@genomes2015]. All of the genetic data has been aligned to build 37 (hg19) coordinates.  
 
 ```{r}
 #| label: setup
