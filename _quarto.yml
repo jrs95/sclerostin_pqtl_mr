@@ -61,4 +61,4 @@ format:
     toc: true
     number-depth: 3
 
-editor: visual
+editor: source
