@@ -12,7 +12,7 @@ The code book is available here: https://jrs95.github.io/sclerostin_pqtl_mr
 
 ## Citation
 
-Staley JR *et al*. Genetic data do not provide evidence that lower sclerostin is associated with increased risk of atherosclerosis: comment on the article by Zheng *et al*. Arthritis Rheumatol 2023; DOI: [10.1002/art.42751](https://acrjournals.onlinelibrary.wiley.com/doi/10.1002/art.42751)  
+Staley JR *et al*. Genetic data do not provide evidence that lower sclerostin is associated with increased risk of atherosclerosis: comment on the article by Zheng *et al*. Arthritis Rheumatol [2025;77(9):1280-1282](https://acrjournals.onlinelibrary.wiley.com/doi/10.1002/art.42751).  
 
 ## Licenses
 

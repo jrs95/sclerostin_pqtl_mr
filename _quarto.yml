@@ -53,7 +53,7 @@ format:
     grid:
       sidebar-width: 275px
     theme:
-      light: [cosmo, theme.scss]
+      light: [cosmo]
     code-copy: true
     code-overflow: wrap
     code-tools: true
