@@ -4,7 +4,7 @@
 
 This repository contains the code book used in our comment on "Lowering of Circulating Sclerostin May Increase Risk of Atherosclerosis and its Risk Factors: Evidence From a Genome-Wide Association Meta-Analysis Followed by Mendelian Randomization" by [Zheng et al](https://pubmed.ncbi.nlm.nih.gov/37096546/). These analyses use genetic variants in *cis* of the *SOST* gene (the gene that encodes sclerostin) that are associated with circulating sclerostin protein levels, known as protein quantitative trait loci (pQTL). We visualize the *SOST* gene region for each phenotype and perform Mendelian randomization (MR) and colocalization analyses for the cardiovascular events and risk factors tested using results from the same (or equivalent) genome-wide association studies (GWAS) as used by [Zheng et al](https://pubmed.ncbi.nlm.nih.gov/37096546/). Sensitivity Mendelian randomization analyses using European only samples where possible and *cis* sclerostin pQTLs from UK Biobank were also performed.  
 
-All of the code was written in R (version 4.3.1). The code book was written using Quarto (version 1.3.433).  
+All of the code was written in R (version 4.3.1). The code book was written using Quarto (version 1.7.30).  
 
 ## Code book
 
