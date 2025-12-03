@@ -108,19 +108,11 @@ coloc_table %>%
 #| classes: empty_table
 #| tbl-cap: Colocalization results of sclerostin with the phenotypes tested in the *SOST* region [@zheng2023]
 ```
-<<<<<<< HEAD
 
 ```{r}
 #| label: coloc-table-tbl
 #| echo: false
 
-=======
-
-```{r}
-#| label: coloc-table-tbl
-#| echo: false
-
->>>>>>> 30fcfd6357db0e888d3aa719e5b3b7a1de8c6012
 with_tooltip <- function(value, tooltip) {
     tags$abbr(
         style = "cursor: help",
@@ -341,19 +333,11 @@ coloc_results %>%
 #| classes: empty_table
 #| tbl-cap: Colocalization results of sclerostin with the phenotypes tested in the *SOST* region
 ```
-<<<<<<< HEAD
 
 ```{r}
 #| label: coloc-results-tbl
 #| echo: false
 
-=======
-
-```{r}
-#| label: coloc-results-tbl
-#| echo: false
-
->>>>>>> 30fcfd6357db0e888d3aa719e5b3b7a1de8c6012
 with_tooltip <- function(value, tooltip) {
     tags$abbr(
         style = "cursor: help",

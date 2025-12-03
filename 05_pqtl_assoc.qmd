@@ -105,19 +105,11 @@ assoc <- gwas %>%
 #| classes: empty_table
 #| tbl-cap: GWAS associations with sclerostin pQTLs (original datasets)
 ```
-<<<<<<< HEAD
 
 ```{r}
 #| label: pqtls-assoc-tbl
 #| echo: false
 
-=======
-
-```{r}
-#| label: pqtls-assoc-tbl
-#| echo: false
-
->>>>>>> 30fcfd6357db0e888d3aa719e5b3b7a1de8c6012
 assoc %>%
     reactable(
         searchable = TRUE,
@@ -169,19 +161,11 @@ assoc_add <- gwas %>%
 #| classes: empty_table
 #| tbl-cap: GWAS associations with sclerostin pQTLs (additional datasets)
 ```
-<<<<<<< HEAD
 
 ```{r}
 #| label: pqtls-assoc-add-tbl
 #| echo: false
 
-=======
-
-```{r}
-#| label: pqtls-assoc-add-tbl
-#| echo: false
-
->>>>>>> 30fcfd6357db0e888d3aa719e5b3b7a1de8c6012
 assoc_add %>%
     reactable(
         searchable = TRUE,
