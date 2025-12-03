@@ -37,8 +37,9 @@
 #' @export
 #' @md
 extract_vcf <- function(
-    file, chr, start, end, index = "tbi",
-    remove_index = FALSE, header = "vcf") {
+  file, chr, start, end, index = "tbi",
+  remove_index = FALSE, header = "vcf"
+) {
   # Region
   region <- GenomicRanges::GRanges(
     seqnames = as.character(chr),
@@ -112,8 +113,9 @@ extract_vcf <- function(
 #' @export
 #' @md
 filter_vcf <- function(
-    data, samples_file, ancestry = "EUR", maf = 0.01,
-    hwe = 1e-10) {
+  data, samples_file, ancestry = "EUR", maf = 0.01,
+  hwe = 1e-10
+) {
   # Samples
   samples <- data.table::fread(
     input = samples_file, header = TRUE, data.table = FALSE,
@@ -244,11 +246,12 @@ filter_vcf <- function(
 #' @export
 #' @md
 gwas_sumstats <- function(
-    data = NULL, file = NULL, id,
-    snps = NULL, chrpos = NULL, chrom = NULL, start = NULL, end = NULL,
-    rsid = "", chromosome, position, effect_allele, other_allele,
-    effect_allele_frequency = "", effect, standard_error, p_value,
-    p_value_transform = FALSE, sep = "\t") {
+  data = NULL, file = NULL, id,
+  snps = NULL, chrpos = NULL, chrom = NULL, start = NULL, end = NULL,
+  rsid = "", chromosome, position, effect_allele, other_allele,
+  effect_allele_frequency = "", effect, standard_error, p_value,
+  p_value_transform = FALSE, sep = "\t"
+) {
   # Data
   if (!is.null(data)) {
     data <- data %>%
@@ -597,7 +600,7 @@ cojo <- function(beta1, beta2, eaf1, eaf2, corr, n) {
   cc <- sqrt(d1 * d2) * corr
 
   # Beta2 adjusted for Beta1
-  beta2_beta1 <- beta2 - cc * beta1 / d2
+  beta2_beta1 <- beta2 - cc * beta1 / d1
 
   # Return
   return(beta2_beta1)
@@ -645,10 +648,11 @@ cojo <- function(beta1, beta2, eaf1, eaf2, corr, n) {
 #' @export
 #' @md
 regional_plot <- function(
-    data, corr, highlights = NULL,
-    highlights_title = NULL, highlights_colour = "#416F6F",
-    highlights_label = TRUE, top_marker = NULL,
-    thresh = c(5e-8, 1e-6), thresh_colour = c("darkgreen", "darkred")) {
+  data, corr, highlights = NULL,
+  highlights_title = NULL, highlights_colour = "#416F6F",
+  highlights_label = TRUE, top_marker = NULL,
+  thresh = c(5e-8, 1e-6), thresh_colour = c("darkgreen", "darkred")
+) {
   # Correlation matrix
   corr <- corr[
     match(data$rsid, rownames(corr)),
