@@ -36,9 +36,10 @@
 #'
 #' @export
 #' @md
-extract_vcf <- function(file, chr, start, end, index = "tbi",
-  remove_index = FALSE, header = "vcf") {
-
+extract_vcf <- function(
+  file, chr, start, end, index = "tbi",
+  remove_index = FALSE, header = "vcf"
+) {
   # Region
   region <- GenomicRanges::GRanges(
     seqnames = as.character(chr),
@@ -74,12 +75,12 @@ extract_vcf <- function(file, chr, start, end, index = "tbi",
   }
 
   # Remove index
-  if (remove_index)
+  if (remove_index) {
     file.remove(paste0(sub(".*/", "", file), ".", index))
+  }
 
   # Return
   return(results)
-
 }
 
 #' @title Filter VCF
@@ -111,9 +112,10 @@ extract_vcf <- function(file, chr, start, end, index = "tbi",
 #'
 #' @export
 #' @md
-filter_vcf <- function(data, samples_file, ancestry = "EUR", maf = 0.01,
-  hwe = 1e-10) {
-
+filter_vcf <- function(
+  data, samples_file, ancestry = "EUR", maf = 0.01,
+  hwe = 1e-10
+) {
   # Samples
   samples <- data.table::fread(
     input = samples_file, header = TRUE, data.table = FALSE,
@@ -155,7 +157,6 @@ filter_vcf <- function(data, samples_file, ancestry = "EUR", maf = 0.01,
 
   # Return
   return(results)
-
 }
 
 #' @title GWAS summary statistics format
@@ -244,19 +245,24 @@ filter_vcf <- function(data, samples_file, ancestry = "EUR", maf = 0.01,
 #'
 #' @export
 #' @md
-gwas_sumstats <- function(data = NULL, file = NULL, id,
+gwas_sumstats <- function(
+  data = NULL, file = NULL, id,
   snps = NULL, chrpos = NULL, chrom = NULL, start = NULL, end = NULL,
   rsid = "", chromosome, position, effect_allele, other_allele,
   effect_allele_frequency = "", effect, standard_error, p_value,
-  p_value_transform = FALSE, sep = "\t") {
-
+  p_value_transform = FALSE, sep = "\t"
+) {
   # Data
   if (!is.null(data)) {
     data <- data %>%
       tibble::as_tibble()
   } else if (is.null(data) && !is.null(file)) {
     data <- data.table::fread(
-      file, header = TRUE, data.table = FALSE, sep = sep, showProgress = FALSE
+      file,
+      header = TRUE,
+      data.table = FALSE,
+      sep = sep,
+      showProgress = FALSE
     )
     data <- data %>%
       tibble::as_tibble()
@@ -389,7 +395,6 @@ gwas_sumstats <- function(data = NULL, file = NULL, id,
 
   # Return
   return(data)
-
 }
 
 #' @title GWAS impute summary statistics
@@ -453,7 +458,6 @@ gwas_sumstats <- function(data = NULL, file = NULL, id,
 #' @export
 #' @md
 gwas_impute <- function(data, snpinfo, corr, n, n_cases = NULL) {
-
   # Data
 
   ## GWAS
@@ -483,20 +487,24 @@ gwas_impute <- function(data, snpinfo, corr, n, n_cases = NULL) {
     ) %>%
     dplyr::select(rsid, chr, pos, ref, alt, af, af_study, z, se)
 
-  if (any(duplicated(gwas$rsid)))
+  if (any(duplicated(gwas$rsid))) {
     stop("rsIDs have to be unique")
-  if (all(is.na(gwas$z)))
+  }
+  if (all(is.na(gwas$z))) {
     stop("all z-statistics are missing")
+  }
 
   ## Correlation
-  if (nrow(corr) != nrow(gwas) || any(rownames(corr) != gwas$rsid))
+  if (nrow(corr) != nrow(gwas) || any(rownames(corr) != gwas$rsid)) {
     stop(
       "the variants in the correlation matrix and the GWAS dataset are not ",
       "the same"
     )
+  }
   r <- corr[rownames(corr) == gwas$rsid[!is.na(gwas$z)], , drop = TRUE]
-  if (!is.vector(r) || length(r) != nrow(gwas))
+  if (!is.vector(r) || length(r) != nrow(gwas)) {
     stop("r is not a vector or does not have the same length as gwas has rows")
+  }
 
   # Impute statistics
 
@@ -551,7 +559,6 @@ gwas_impute <- function(data, snpinfo, corr, n, n_cases = NULL) {
 
   # Return
   return(gwas)
-
 }
 
 #' @title Conditional single SNP analysis
@@ -585,7 +592,6 @@ gwas_impute <- function(data, snpinfo, corr, n, n_cases = NULL) {
 #' @export
 #' @md
 cojo <- function(beta1, beta2, eaf1, eaf2, corr, n) {
-
   # D (diagonal X'X)
   d1 <- 2 * eaf1 * (1 - eaf1) * n
   d2 <- 2 * eaf2 * (1 - eaf2) * n
@@ -598,7 +604,6 @@ cojo <- function(beta1, beta2, eaf1, eaf2, corr, n) {
 
   # Return
   return(beta2_beta1)
-
 }
 
 #' @title Regional plot
@@ -642,11 +647,12 @@ cojo <- function(beta1, beta2, eaf1, eaf2, corr, n) {
 #'
 #' @export
 #' @md
-regional_plot <- function(data, corr, highlights = NULL,
+regional_plot <- function(
+  data, corr, highlights = NULL,
   highlights_title = NULL, highlights_colour = "#416F6F",
   highlights_label = TRUE, top_marker = NULL,
-  thresh = c(5e-8, 1e-6), thresh_colour = c("darkgreen", "darkred")) {
-
+  thresh = c(5e-8, 1e-6), thresh_colour = c("darkgreen", "darkred")
+) {
   # Correlation matrix
   corr <- corr[
     match(data$rsid, rownames(corr)),
@@ -703,7 +709,6 @@ regional_plot <- function(data, corr, highlights = NULL,
 
   # Return
   return(figure)
-
 }
 
 #' @title QQ plot
@@ -727,7 +732,6 @@ regional_plot <- function(data, corr, highlights = NULL,
 #' @export
 #' @md
 qq_plot <- function(data) {
-
   # Data
   if ("trait" %in% names(data) && "rsid" %in% names(data)) {
     data <- data %>%
@@ -738,7 +742,7 @@ qq_plot <- function(data) {
           "<br>p-value: ", signif(pvalue, 3)
         )
       )
-  }  else if ("trait" %in% names(data) && !("rsid" %in% names(data))) {
+  } else if ("trait" %in% names(data) && !("rsid" %in% names(data))) {
     data <- data %>%
       dplyr::mutate(
         text = paste0(
@@ -795,7 +799,6 @@ qq_plot <- function(data) {
 
   # Return
   return(figure)
-
 }
 
 
@@ -831,7 +834,6 @@ qq_plot <- function(data) {
 #' @export
 #' @md
 coloc <- function(bf1, bf2, p1 = 1e-4, p2 = 1e-4, p12 = 2e-6) {
-
   # Bayes factors for hypotheses
 
   ## HO
@@ -859,7 +861,6 @@ coloc <- function(bf1, bf2, p1 = 1e-4, p2 = 1e-4, p12 = 2e-6) {
 
   # Return
   return(res)
-
 }
 
 #' @title Colocalization approximate Bayes factors
@@ -887,7 +888,6 @@ coloc <- function(bf1, bf2, p1 = 1e-4, p2 = 1e-4, p12 = 2e-6) {
 #' @export
 #' @md
 coloc_bf <- function(z, v, binary = FALSE, pheno_var = 1) {
-
   # Variance prior
   if (binary == TRUE) {
     sd_prior <- 0.2
@@ -901,7 +901,6 @@ coloc_bf <- function(z, v, binary = FALSE, pheno_var = 1) {
 
   # Return
   return(bf)
-
 }
 
 #' @title Colocalization analysis log sum
@@ -926,13 +925,11 @@ coloc_bf <- function(z, v, binary = FALSE, pheno_var = 1) {
 #' @noRd
 #' @md
 coloc_logsum <- function(x) {
-
   # Compute log-sum
   res <- max(x) + log(sum(exp(x - max(x))))
 
   # Return
   return(res)
-
 }
 
 #' @title Colocalization analysis log difference
@@ -959,13 +956,11 @@ coloc_logsum <- function(x) {
 #' @noRd
 #' @md
 coloc_logdiff <- function(x, y) {
-
   # Compute log-diff
   res <- max(x, y) + log(exp(x - max(x, y)) - exp(y - max(x, y)))
 
   # Return
   return(res)
-
 }
 
 #' @title Empty table
@@ -984,13 +979,8 @@ coloc_logdiff <- function(x, y) {
 #'
 #' @export
 #' @md
-empty_kable <- function() {
-
-  # Results
-  results <- knitr::kable(tibble(" " = "")[c(), ], col.names = NULL) %>%
-    kableExtra::kable_styling(full_width = TRUE)
-
-  # Return
-  return(results)
-
-}
+# empty_kable <- function() {
+#   results <- knitr::kable(tibble(" " = "")[c(), ], col.names = NULL) %>%
+#     kableExtra::kable_styling(full_width = TRUE)
+#   return(results)
+# }

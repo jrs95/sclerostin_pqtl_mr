@@ -31,6 +31,22 @@ library(tippy)
 source("./scripts/00_functions.R")
 ```
 
+```{css class_empty_table, echo = FALSE}
+.empty_table .table thead {
+  visibility: collapse;
+}
+.empty_table .table tbody {
+  visibility: collapse;
+}
+.empty_table .table {
+  border-collapse: inherit;
+  padding-bottom: none;
+}
+.empty_table .table.table.table-sm.table-striped.small {
+  margin: auto;
+}
+```
+
 ## Data
 
 These results were extracted from Supplementary Table 10 in @zheng2023.[^2]  
@@ -89,10 +105,13 @@ coloc_table %>%
 
 ```{r}
 #| label: tbl-coloc-table
+#| classes: empty_table
 #| tbl-cap: Colocalization results of sclerostin with the phenotypes tested in the *SOST* region [@zheng2023]
-#| echo: false
+```
 
-empty_kable()
+```{r}
+#| label: coloc-table-tbl
+#| echo: false
 
 with_tooltip <- function(value, tooltip) {
   tags$abbr(
@@ -315,10 +334,13 @@ coloc_results %>%
 
 ```{r}
 #| label: tbl-coloc-results
+#| classes: empty_table
 #| tbl-cap: Colocalization results of sclerostin with the phenotypes tested in the *SOST* region
-#| echo: false
+```
 
-empty_kable()
+```{r}
+#| label: coloc-results-tbl
+#| echo: false
 
 with_tooltip <- function(value, tooltip) {
   tags$abbr(

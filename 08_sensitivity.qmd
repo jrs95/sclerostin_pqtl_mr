@@ -17,6 +17,22 @@ library(ggiraph)
 source("./scripts/00_functions.R")
 ```
 
+```{css class_empty_table, echo = FALSE}
+.empty_table .table thead {
+  visibility: collapse;
+}
+.empty_table .table tbody {
+  visibility: collapse;
+}
+.empty_table .table {
+  border-collapse: inherit;
+  padding-bottom: none;
+}
+.empty_table .table.table.table-sm.table-striped.small {
+  margin: auto;
+}
+```
+
 ## European only analyses {#sec-mr-eur}
 
 The same Mendelian randomization analyses as in [@sec-mr] were performed using European only samples (where available).  
@@ -82,10 +98,13 @@ mr_results %>%
 
 ```{r}
 #| label: tbl-mr-results-eur
+#| classes: empty_table
 #| tbl-cap: MR results of the effect of per SD lower sclerostin on cardiovascular events and risk factors
-#| echo: false
+```
 
-empty_kable()
+```{r}
+#| label: mr-results-eur-tbl
+#| echo: false
 
 mr_results <- mr_results %>%
   mutate(
@@ -378,10 +397,13 @@ mr_results %>%
 
 ```{r}
 #| label: tbl-mr-results-ukbb
+#| classes: empty_table
 #| tbl-cap: MR results of the effect of per SD lower sclerostin on cardiovascular events and risk factors
-#| echo: false
+```
 
-empty_kable()
+```{r}
+#| label: mr-results-ukbb-tbl
+#| echo: false
 
 mr_results %>%
   mutate(

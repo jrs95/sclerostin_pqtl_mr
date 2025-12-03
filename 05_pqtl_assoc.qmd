@@ -16,6 +16,22 @@ library(ggiraph)
 source("./scripts/00_functions.R")
 ```
 
+```{css class_empty_table, echo = FALSE}
+.empty_table .table thead {
+  visibility: collapse;
+}
+.empty_table .table tbody {
+  visibility: collapse;
+}
+.empty_table .table {
+  border-collapse: inherit;
+  padding-bottom: none;
+}
+.empty_table .table.table.table-sm.table-striped.small {
+  margin: auto;
+}
+```
+
 Genetic associations of the sclerostin pQTLs in the datasets in [@tbl-gwas-study-info].  
 
 ```{r}
@@ -86,10 +102,13 @@ assoc <- gwas %>%
 
 ```{r}
 #| label: tbl-pqtls-assoc
+#| classes: empty_table
 #| tbl-cap: GWAS associations with sclerostin pQTLs (original datasets)
-#| echo: false
+```
 
-empty_kable()
+```{r}
+#| label: pqtls-assoc-tbl
+#| echo: false
 
 assoc %>%
   reactable(
@@ -139,10 +158,13 @@ assoc_add <- gwas %>%
 
 ```{r}
 #| label: tbl-pqtls-assoc-add
+#| classes: empty_table
 #| tbl-cap: GWAS associations with sclerostin pQTLs (additional datasets)
-#| echo: false
+```
 
-empty_kable()
+```{r}
+#| label: pqtls-assoc-add-tbl
+#| echo: false
 
 assoc_add %>%
   reactable(

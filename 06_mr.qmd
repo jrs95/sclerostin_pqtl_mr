@@ -17,6 +17,22 @@ library(ggiraph)
 source("./scripts/00_functions.R")
 ```
 
+```{css class_empty_table, echo = FALSE}
+.empty_table .table thead {
+  visibility: collapse;
+}
+.empty_table .table tbody {
+  visibility: collapse;
+}
+.empty_table .table {
+  border-collapse: inherit;
+  padding-bottom: none;
+}
+.empty_table .table.table.table-sm.table-striped.small {
+  margin: auto;
+}
+```
+
 ## Data
 
 ```{r}
@@ -51,7 +67,6 @@ Mendelian randomization (MR) analyses of circulating sclerostin against cardiova
 # MR analyses
 mr_results <- tibble()
 for (id in unique(gwas$id)) {
-
   ## MR data
   mr_gwas <- gwas %>%
     filter(id == !!id) %>%
@@ -64,7 +79,6 @@ for (id in unique(gwas$id)) {
 
   ## MR analysis
   for (j in seq_len(2)) {
-
     ### Data
     if (j == 1) {
       mr_data <- mr_gwas
@@ -85,8 +99,9 @@ for (id in unique(gwas$id)) {
       ]
       mr_model <- "2_cis_pqtls"
     }
-    if (any(mr_data$rsid != rownames(mr_corr)))
+    if (any(mr_data$rsid != rownames(mr_corr))){
       stop("genetic varaints are not aligned between the GWAS data and the LD matrix")
+    }
 
     ### Input
     mr_inputs <- MendelianRandomization::mr_input(
@@ -116,9 +131,7 @@ for (id in unique(gwas$id)) {
     ### Results
     mr_results <- mr_results %>%
       bind_rows(mr_analysis)
-
   }
-
 }
 
 # MR results
@@ -200,10 +213,13 @@ mr_results %>%
 
 ```{r}
 #| label: tbl-mr-results
+#| classes: empty_table
 #| tbl-cap: MR results of the effect of per SD lower sclerostin on cardiovascular events and risk factors
-#| echo: false
+```
 
-empty_kable()
+```{r}
+#| label: mr-results-tbl
+#| echo: false
 
 mr_results <- mr_results %>%
   mutate(

@@ -17,6 +17,22 @@ library(reactable)
 source("./scripts/00_functions.R")
 ```
 
+```{css class_empty_table, echo = FALSE}
+.empty_table .table thead {
+  visibility: collapse;
+}
+.empty_table .table tbody {
+  visibility: collapse;
+}
+.empty_table .table {
+  border-collapse: inherit;
+  padding-bottom: none;
+}
+.empty_table .table.table.table-sm.table-striped.small {
+  margin: auto;
+}
+```
+
 ## Datasets
 
 ### Sclerostin pQTLs
@@ -35,10 +51,13 @@ pqtls <- fread(
 
 ```{r}
 #| label: tbl-pqtls
+#| classes: empty_table
 #| tbl-cap: cis pQTLs
-#| echo: false
+```
 
-empty_kable()
+```{r}
+#| label: pqtls-tbl
+#| echo: false
 
 pqtls %>%
   reactable(
@@ -112,10 +131,13 @@ studies <- fread(
 
 ```{r}
 #| label: tbl-gwas-study-info
+#| classes: empty_table
 #| tbl-cap: GWAS study information
-#| echo: false
+```
 
-empty_kable()
+```{r}
+#| label: gwas-study-info-tbl
+#| echo: false
 
 studies %>%
   mutate(
