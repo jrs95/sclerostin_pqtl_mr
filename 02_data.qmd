@@ -44,8 +44,8 @@ The *cis* sclerostin pQTLs in [@tbl-pqtls] were extracted from Supplementary Tab
 #| echo: false
 
 pqtls <- fread(
-  "./data/00_data_pqtls.tsv",
-  header = TRUE, data.table = FALSE, sep = "\t"
+    "./data/00_data_pqtls.tsv",
+    header = TRUE, data.table = FALSE, sep = "\t"
 )
 ```
 
@@ -60,26 +60,26 @@ pqtls <- fread(
 #| echo: false
 
 pqtls %>%
-  reactable(
-    searchable = TRUE,
-    pagination = TRUE,
-    bordered = TRUE,
-    striped = TRUE,
-    columns = list(
-      rsid = colDef(name = "rsID", minWidth = 100, align = "left"),
-      chr = colDef(name = "Chr", minWidth = 50, align = "left"),
-      pos = colDef(name = "Position", minWidth = 90, align = "left"),
-      ea = colDef(name = "Effect allele", minWidth = 80, align = "left"),
-      oa = colDef(name = "Other allele", minWidth = 80, align = "left"),
-      eaf = colDef(
-        name = "Effect allele frequency", minWidth = 100, align = "left"
-      ),
-      beta = colDef(name = "Effect size", minWidth = 80, align = "left"),
-      se = colDef(name = "Standard error", minWidth = 80, align = "left"),
-      pvalue = colDef(name = "P-value", minWidth = 80, align = "left"),
-      n = colDef(name = "Number of samples", minWidth = 100, align = "left")
+    reactable(
+        searchable = TRUE,
+        pagination = TRUE,
+        bordered = TRUE,
+        striped = TRUE,
+        columns = list(
+            rsid = colDef(name = "rsID", minWidth = 100, align = "left"),
+            chr = colDef(name = "Chr", minWidth = 50, align = "left"),
+            pos = colDef(name = "Position", minWidth = 90, align = "left"),
+            ea = colDef(name = "Effect allele", minWidth = 80, align = "left"),
+            oa = colDef(name = "Other allele", minWidth = 80, align = "left"),
+            eaf = colDef(
+                name = "Effect allele frequency", minWidth = 100, align = "left"
+            ),
+            beta = colDef(name = "Effect size", minWidth = 80, align = "left"),
+            se = colDef(name = "Standard error", minWidth = 80, align = "left"),
+            pvalue = colDef(name = "P-value", minWidth = 80, align = "left"),
+            n = colDef(name = "Number of samples", minWidth = 100, align = "left")
+        )
     )
-  )
 ```
 
 <br style="line-height: 5px" />
@@ -89,14 +89,14 @@ pqtls %>%
 #| echo: false
 
 pqtls %>%
-  downloadthis::download_this(
-    output_name = "pqtls",
-    output_extension = ".xlsx",
-    button_label = "Download as xlsx",
-    button_type = "primary",
-    has_icon = TRUE,
-    icon = "fa fa-save"
-  )
+    downloadthis::download_this(
+        output_name = "pqtls",
+        output_extension = ".xlsx",
+        button_label = "Download as xlsx",
+        button_type = "primary",
+        has_icon = TRUE,
+        icon = "fa fa-save"
+    )
 ```
 
 <details>
@@ -328,7 +328,7 @@ The output of the script is an `Rda` file saved in the `data` folder as `02_data
 
 #### pQTLs
 
-The GWAS results for the sclerostin pQTLs are extracted from `02_data_gwas_sost_region` using the `03_data_gwas_pqtls.R` R script located in the `scripts` folder. The associations of rs1107747 and rs4793023 with HDL cholesterol and triglycerides are adjusted for rs72836567 using the COJO methodology [@yang2012] to account for the effects of the *CD300LG* gene (see [@sec-ldmat] for further details). No good proxy variants ($r^2 \geq$ 0.8) were identified for the missing sclerostin pQTLs in GCST006867.  
+The GWAS results for the sclerostin pQTLs are extracted from `02_data_gwas_sost_region` using the `03_data_gwas_pqtls.R` R script located in the `scripts` folder. The associations of rs1107747 and rs4793023 with HDL cholesterol and triglycerides are adjusted for rs72836567 using the COJO methodology [@yang2012] to account for the effects of the *CD300LG* gene (see [@sec-ldmat] for further details).[^4] No good proxy variants ($r^2 \geq$ 0.8) were identified for the missing sclerostin pQTLs in GCST006867.  
 
 ```{r}
 #| label: data-gwas-pqtls
@@ -378,3 +378,4 @@ The output of the script is an `Rda` file saved in the `data` folder as `03_data
 [^1]: An extra 25KB was added upstream to ensure that all relevant *CD300LG* variants are included in the region.  
 [^2]: The ischemic and cardioembolic stroke GWAS results from METASTROKE [@malik2016] used by @zheng2023 were replaced with those from MEGASTROKE [@malik2018] and the UK Biobank hypertension GWAS results from [OpenGWAS](https://gwas.mrcieu.ac.uk/datasets/ukb-b-14057/) used by @zheng2023 were replaced with those from [Pan-UKBB](https://pan.ukbb.broadinstitute.org/downloads) due to licensing restrictions. The GWAS of coronary artery calcification was not available (either publicly or via application) at the time of this analysis [@kavousi2022].  
 [^3]: Since @zheng2023 use trans-ethnic GWAS results, we followed suit. In all of the trans-ethnic analyses the majority of the samples were from European ancestry. There was no material difference in the results if we restricted the analyses to analysing Europeans only where possible [@sec-mr-eur].  
+[^4]: The results presented here will differ from those in the article because we use an approximation to COJO, whereas the article uses the GCTA tool.  
