@@ -101,11 +101,19 @@ mr_results %>%
 #| classes: empty_table
 #| tbl-cap: MR results of the effect of per SD lower sclerostin on cardiovascular events and risk factors
 ```
+<<<<<<< HEAD
 
 ```{r}
 #| label: mr-results-eur-tbl
 #| echo: false
 
+=======
+
+```{r}
+#| label: mr-results-eur-tbl
+#| echo: false
+
+>>>>>>> 30fcfd6357db0e888d3aa719e5b3b7a1de8c6012
 mr_results <- mr_results %>%
     mutate(
         model_id = if_else(
@@ -399,11 +407,19 @@ mr_results %>%
 #| classes: empty_table
 #| tbl-cap: MR results of the effect of per SD lower sclerostin on cardiovascular events and risk factors
 ```
+<<<<<<< HEAD
 
 ```{r}
 #| label: mr-results-ukbb-tbl
 #| echo: false
 
+=======
+
+```{r}
+#| label: mr-results-ukbb-tbl
+#| echo: false
+
+>>>>>>> 30fcfd6357db0e888d3aa719e5b3b7a1de8c6012
 mr_results %>%
     mutate(
         model = gsub("_", " ", model),
