@@ -44,17 +44,17 @@ load("./data/03_data_gwas_pqtls.Rda")
 
 # pQTLs
 pqtls <- pqtls %>%
-  mutate(
-    ld_cluster = if_else(
-      rsid %in% c("rs66838809", "rs80107551", "rs76449013"),
-      1,
-      2
+    mutate(
+        ld_cluster = if_else(
+            rsid %in% c("rs66838809", "rs80107551", "rs76449013"),
+            1,
+            2
+        )
     )
-  )
 
 # GWAS
 gwas <- gwas %>%
-  filter(!(id %in% c("GCST006979", "GCST006980")))
+    filter(!(id %in% c("GCST006979", "GCST006980")))
 ```
 
 ## Analyses {#sec-mr}
@@ -67,81 +67,81 @@ Mendelian randomization (MR) analyses of circulating sclerostin against cardiova
 # MR analyses
 mr_results <- tibble()
 for (id in unique(gwas$id)) {
-  ## MR data
-  mr_gwas <- gwas %>%
-    filter(id == !!id) %>%
-    inner_join(
-      x = pqtls,
-      y = .,
-      by = c("rsid", "chr", "pos", "ref", "alt")
-    ) %>%
-    relocate(id, .before = rsid)
+    ## MR data
+    mr_gwas <- gwas %>%
+        filter(id == !!id) %>%
+        inner_join(
+            x = pqtls,
+            y = .,
+            by = c("rsid", "chr", "pos", "ref", "alt")
+        ) %>%
+        relocate(id, .before = rsid)
 
-  ## MR analysis
-  for (j in seq_len(2)) {
-    ### Data
-    if (j == 1) {
-      mr_data <- mr_gwas
-      mr_corr <- ld_mat[
-        match(mr_data$rsid, rownames(ld_mat)),
-        match(mr_data$rsid, rownames(ld_mat)),
-        drop = FALSE
-      ]
-      mr_model <- "5_cis_pqtls"
-    } else {
-      mr_data <- mr_gwas %>%
-        arrange(pvalue.x) %>%
-        distinct(ld_cluster, .keep_all = TRUE)
-      mr_corr <- ld_mat[
-        match(mr_data$rsid, rownames(ld_mat)),
-        match(mr_data$rsid, rownames(ld_mat)),
-        drop = FALSE
-      ]
-      mr_model <- "2_cis_pqtls"
+    ## MR analysis
+    for (j in seq_len(2)) {
+        ### Data
+        if (j == 1) {
+            mr_data <- mr_gwas
+            mr_corr <- ld_mat[
+                match(mr_data$rsid, rownames(ld_mat)),
+                match(mr_data$rsid, rownames(ld_mat)),
+                drop = FALSE
+            ]
+            mr_model <- "5_cis_pqtls"
+        } else {
+            mr_data <- mr_gwas %>%
+                arrange(pvalue.x) %>%
+                distinct(ld_cluster, .keep_all = TRUE)
+            mr_corr <- ld_mat[
+                match(mr_data$rsid, rownames(ld_mat)),
+                match(mr_data$rsid, rownames(ld_mat)),
+                drop = FALSE
+            ]
+            mr_model <- "2_cis_pqtls"
+        }
+        if (any(mr_data$rsid != rownames(mr_corr))) {
+            stop("genetic varaints are not aligned between the GWAS data and the LD matrix")
+        }
+
+        ### Input
+        mr_inputs <- MendelianRandomization::mr_input(
+            bx = mr_data$beta.x,
+            bxse = mr_data$se.x,
+            by = mr_data$beta.y,
+            byse = mr_data$se.y,
+            correlation = mr_corr,
+            snps = mr_data$rsid
+        )
+
+        ### Analysis
+        mr_analysis <- MendelianRandomization::mr_ivw(
+            mr_inputs,
+            model = "fixed",
+            correl = TRUE
+        )
+        mr_analysis <- tibble(
+            id = !!id,
+            model = !!mr_model,
+            n_snps = !!nrow(mr_data),
+            beta = -1 * !!round(mr_analysis$Estimate, 6), # per lower SD sclerostin
+            se = !!round(mr_analysis$StdError, 6),
+            pvalue = !!signif(mr_analysis$Pvalue, 4)
+        )
+
+        ### Results
+        mr_results <- mr_results %>%
+            bind_rows(mr_analysis)
     }
-    if (any(mr_data$rsid != rownames(mr_corr))){
-      stop("genetic varaints are not aligned between the GWAS data and the LD matrix")
-    }
-
-    ### Input
-    mr_inputs <- MendelianRandomization::mr_input(
-      bx = mr_data$beta.x,
-      bxse = mr_data$se.x,
-      by = mr_data$beta.y,
-      byse = mr_data$se.y,
-      correlation = mr_corr,
-      snps = mr_data$rsid
-    )
-
-    ### Analysis
-    mr_analysis <- MendelianRandomization::mr_ivw(
-      mr_inputs,
-      model = "fixed",
-      correl = TRUE
-    )
-    mr_analysis <- tibble(
-      id = !!id,
-      model = !!mr_model,
-      n_snps = !!nrow(mr_data),
-      beta = -1 * !!round(mr_analysis$Estimate, 6), # per lower SD sclerostin
-      se = !!round(mr_analysis$StdError, 6),
-      pvalue = !!signif(mr_analysis$Pvalue, 4)
-    )
-
-    ### Results
-    mr_results <- mr_results %>%
-      bind_rows(mr_analysis)
-  }
 }
 
 # MR results
 mr_results <- studies %>%
-  select(id, pmid, trait, n, n_cases) %>%
-  inner_join(
-    x = .,
-    y = mr_results,
-    by = "id"
-  )
+    select(id, pmid, trait, n, n_cases) %>%
+    inner_join(
+        x = .,
+        y = mr_results,
+        by = "id"
+    )
 ```
 
 Additional MR analyses of hypertension[^2], stroke events[^3] and coronary artery calcification were extracted from Table 2 in @zheng2023 and added to the results.
@@ -151,27 +151,27 @@ Additional MR analyses of hypertension[^2], stroke events[^3] and coronary arter
 
 # MR analyses extra
 mr_results_extra <- fread(
-  "./data/00_data_mr.tsv",
-  header = TRUE, data.table = FALSE, sep = "\t"
+    "./data/00_data_mr.tsv",
+    header = TRUE, data.table = FALSE, sep = "\t"
 )
 mr_studies_extra <- fread(
-  "./data/00_data_mr_studies.tsv",
-  header = TRUE, data.table = FALSE, sep = "\t"
+    "./data/00_data_mr_studies.tsv",
+    header = TRUE, data.table = FALSE, sep = "\t"
 )
 
 # MR results
 mr_results <- mr_studies_extra %>%
-  select(id, pmid, trait, n, n_cases) %>%
-  inner_join(
-    x = .,
-    y = mr_results_extra,
-    by = "id"
-  ) %>%
-  bind_rows(mr_results, .)
+    select(id, pmid, trait, n, n_cases) %>%
+    inner_join(
+        x = .,
+        y = mr_results_extra,
+        by = "id"
+    ) %>%
+    bind_rows(mr_results, .)
 
 # MR studies
 mr_studies <- studies %>%
-  bind_rows(mr_studies_extra)
+    bind_rows(mr_studies_extra)
 ```
 
 ```{r}
@@ -179,14 +179,14 @@ mr_studies <- studies %>%
 #| echo: false
 
 mr_results %>%
-  downloadthis::download_this(
-    output_name = "mr",
-    output_extension = ".xlsx",
-    button_label = "Download as xlsx",
-    button_type = "primary",
-    has_icon = TRUE,
-    icon = "fa fa-save"
-  )
+    downloadthis::download_this(
+        output_name = "mr",
+        output_extension = ".xlsx",
+        button_label = "Download as xlsx",
+        button_type = "primary",
+        has_icon = TRUE,
+        icon = "fa fa-save"
+    )
 ```
 
 <details>
@@ -222,59 +222,59 @@ mr_results %>%
 #| echo: false
 
 mr_results <- mr_results %>%
-  mutate(
-    model_id = if_else(
-      model == "2_cis_pqtls",
-      0,
-      1
-    )
-  ) %>%
-  arrange(model_id) %>%
-  select(-c(model_id))
+    mutate(
+        model_id = if_else(
+            model == "2_cis_pqtls",
+            0,
+            1
+        )
+    ) %>%
+    arrange(model_id) %>%
+    select(-c(model_id))
 
 mr_results %>%
-  mutate(
-    model = gsub("_", " ", model),
-    lci = beta - 1.96 * se,
-    uci = beta + 1.96 * se,
-    est_ci = if_else(
-      is.na(n_cases),
-      sprintf(
-        "%.3f (%.3f, %.3f)",
-        round(beta, 3), round(lci, 3), round(uci, 3)
-      ),
-      sprintf(
-        "%.3f (%.3f, %.3f)",
-        round(exp(beta), 3), round(exp(lci), 3), round(exp(uci), 3)
-      )
-    ),
-    pvalue = signif(pvalue, 3)
-  ) %>%
-  select(id, trait, model, n_snps, est_ci, pvalue) %>%
-  reactable(
-    searchable = TRUE,
-    pagination = TRUE,
-    bordered = TRUE,
-    striped = TRUE,
-    columns = list(
-      id = colDef(name = "Dataset ID", minWidth = 100, align = "left"),
-      trait = colDef(name = "Phenotype", minWidth = 160, align = "left"),
-      model = colDef(name = "Model", minWidth = 80, align = "left"),
-      n_snps = colDef(name = "N SNPs", minWidth = 70, align = "left"),
-      est_ci = colDef(
-        name = "OR / Effect (95% CI)", minWidth = 120, align = "left",
-        style = function(value, index) {
-          if (is.na(mr_results$n_cases[index])) {
-            colour <- "darkgreen"
-          } else {
-            colour <- "darkblue"
-          }
-          list(color = colour)
-        }
-      ),
-      pvalue = colDef(name = "P-value", minWidth = 70, align = "left")
+    mutate(
+        model = gsub("_", " ", model),
+        lci = beta - 1.96 * se,
+        uci = beta + 1.96 * se,
+        est_ci = if_else(
+            is.na(n_cases),
+            sprintf(
+                "%.3f (%.3f, %.3f)",
+                round(beta, 3), round(lci, 3), round(uci, 3)
+            ),
+            sprintf(
+                "%.3f (%.3f, %.3f)",
+                round(exp(beta), 3), round(exp(lci), 3), round(exp(uci), 3)
+            )
+        ),
+        pvalue = signif(pvalue, 3)
+    ) %>%
+    select(id, trait, model, n_snps, est_ci, pvalue) %>%
+    reactable(
+        searchable = TRUE,
+        pagination = TRUE,
+        bordered = TRUE,
+        striped = TRUE,
+        columns = list(
+            id = colDef(name = "Dataset ID", minWidth = 100, align = "left"),
+            trait = colDef(name = "Phenotype", minWidth = 160, align = "left"),
+            model = colDef(name = "Model", minWidth = 80, align = "left"),
+            n_snps = colDef(name = "N SNPs", minWidth = 70, align = "left"),
+            est_ci = colDef(
+                name = "OR / Effect (95% CI)", minWidth = 120, align = "left",
+                style = function(value, index) {
+                    if (is.na(mr_results$n_cases[index])) {
+                        colour <- "darkgreen"
+                    } else {
+                        colour <- "darkblue"
+                    }
+                    list(color = colour)
+                }
+            ),
+            pvalue = colDef(name = "P-value", minWidth = 70, align = "left")
+        )
     )
-  )
 ```
 
 `r fontawesome::fa(name = "fas fa-square", fill = "darkgreen", height = "1em")` : Effect (in SD)  
@@ -295,15 +295,15 @@ mr_results %>%
 #| fig-cap: QQ plot of MR results (2 *cis* pQTLs) for the original datasets
 
 mr_results %>%
-  filter(model == "2_cis_pqtls") %>%
-  inner_join(
-    x = select(mr_studies, id, flag),
-    y = .,
-    by = "id"
-  ) %>%
-  filter(flag == "Y") %>%
-  distinct(trait, .keep_all = TRUE) %>%
-  qq_plot()
+    filter(model == "2_cis_pqtls") %>%
+    inner_join(
+        x = select(mr_studies, id, flag),
+        y = .,
+        by = "id"
+    ) %>%
+    filter(flag == "Y") %>%
+    distinct(trait, .keep_all = TRUE) %>%
+    qq_plot()
 ```
 
 ##### 5 *cis* pQTLs
@@ -313,15 +313,15 @@ mr_results %>%
 #| fig-cap: QQ plot of MR results (5 *cis* pQTLs) for the original datasets
 
 mr_results %>%
-  filter(model == "5_cis_pqtls") %>%
-  inner_join(
-    x = select(mr_studies, id, flag),
-    y = .,
-    by = "id"
-  ) %>%
-  filter(flag == "Y") %>%
-  distinct(trait, .keep_all = TRUE) %>%
-  qq_plot()
+    filter(model == "5_cis_pqtls") %>%
+    inner_join(
+        x = select(mr_studies, id, flag),
+        y = .,
+        by = "id"
+    ) %>%
+    filter(flag == "Y") %>%
+    distinct(trait, .keep_all = TRUE) %>%
+    qq_plot()
 ```
 
 :::
@@ -337,14 +337,14 @@ mr_results %>%
 #| fig-cap: QQ plot of MR results (2 *cis* pQTLs) for the additional datasets
 
 mr_results %>%
-  filter(model == "2_cis_pqtls") %>%
-  inner_join(
-    x = select(mr_studies, id, flag),
-    y = .,
-    by = "id"
-  ) %>%
-  filter(flag == "N") %>%
-  qq_plot()
+    filter(model == "2_cis_pqtls") %>%
+    inner_join(
+        x = select(mr_studies, id, flag),
+        y = .,
+        by = "id"
+    ) %>%
+    filter(flag == "N") %>%
+    qq_plot()
 ```
 
 ##### 5 *cis* pQTLs
@@ -354,14 +354,14 @@ mr_results %>%
 #| fig-cap: QQ plot of MR results (5 *cis* pQTLs) for the additional datasets
 
 mr_results %>%
-  filter(model == "5_cis_pqtls") %>%
-  inner_join(
-    x = select(mr_studies, id, flag),
-    y = .,
-    by = "id"
-  ) %>%
-  filter(flag == "N") %>%
-  qq_plot()
+    filter(model == "5_cis_pqtls") %>%
+    inner_join(
+        x = select(mr_studies, id, flag),
+        y = .,
+        by = "id"
+    ) %>%
+    filter(flag == "N") %>%
+    qq_plot()
 ```
 
 :::

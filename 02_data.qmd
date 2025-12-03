@@ -44,8 +44,8 @@ The *cis* sclerostin pQTLs in [@tbl-pqtls] were extracted from Supplementary Tab
 #| echo: false
 
 pqtls <- fread(
-  "./data/00_data_pqtls.tsv",
-  header = TRUE, data.table = FALSE, sep = "\t"
+    "./data/00_data_pqtls.tsv",
+    header = TRUE, data.table = FALSE, sep = "\t"
 )
 ```
 
@@ -60,26 +60,26 @@ pqtls <- fread(
 #| echo: false
 
 pqtls %>%
-  reactable(
-    searchable = TRUE,
-    pagination = TRUE,
-    bordered = TRUE,
-    striped = TRUE,
-    columns = list(
-      rsid = colDef(name = "rsID", minWidth = 100, align = "left"),
-      chr = colDef(name = "Chr", minWidth = 50, align = "left"),
-      pos = colDef(name = "Position", minWidth = 90, align = "left"),
-      ea = colDef(name = "Effect allele", minWidth = 80, align = "left"),
-      oa = colDef(name = "Other allele", minWidth = 80, align = "left"),
-      eaf = colDef(
-        name = "Effect allele frequency", minWidth = 100, align = "left"
-      ),
-      beta = colDef(name = "Effect size", minWidth = 80, align = "left"),
-      se = colDef(name = "Standard error", minWidth = 80, align = "left"),
-      pvalue = colDef(name = "P-value", minWidth = 80, align = "left"),
-      n = colDef(name = "Number of samples", minWidth = 100, align = "left")
+    reactable(
+        searchable = TRUE,
+        pagination = TRUE,
+        bordered = TRUE,
+        striped = TRUE,
+        columns = list(
+            rsid = colDef(name = "rsID", minWidth = 100, align = "left"),
+            chr = colDef(name = "Chr", minWidth = 50, align = "left"),
+            pos = colDef(name = "Position", minWidth = 90, align = "left"),
+            ea = colDef(name = "Effect allele", minWidth = 80, align = "left"),
+            oa = colDef(name = "Other allele", minWidth = 80, align = "left"),
+            eaf = colDef(
+                name = "Effect allele frequency", minWidth = 100, align = "left"
+            ),
+            beta = colDef(name = "Effect size", minWidth = 80, align = "left"),
+            se = colDef(name = "Standard error", minWidth = 80, align = "left"),
+            pvalue = colDef(name = "P-value", minWidth = 80, align = "left"),
+            n = colDef(name = "Number of samples", minWidth = 100, align = "left")
+        )
     )
-  )
 ```
 
 <br style="line-height: 5px" />
@@ -89,14 +89,14 @@ pqtls %>%
 #| echo: false
 
 pqtls %>%
-  downloadthis::download_this(
-    output_name = "pqtls",
-    output_extension = ".xlsx",
-    button_label = "Download as xlsx",
-    button_type = "primary",
-    has_icon = TRUE,
-    icon = "fa fa-save"
-  )
+    downloadthis::download_this(
+        output_name = "pqtls",
+        output_extension = ".xlsx",
+        button_label = "Download as xlsx",
+        button_type = "primary",
+        has_icon = TRUE,
+        icon = "fa fa-save"
+    )
 ```
 
 <details>
@@ -124,8 +124,8 @@ The GWAS studies used in the analyses[^2] are presented in [@tbl-gwas-study-info
 #| echo: false
 
 studies <- fread(
-  "./data/00_data_studies.tsv",
-  header = TRUE, data.table = FALSE, sep = "\t"
+    "./data/00_data_studies.tsv",
+    header = TRUE, data.table = FALSE, sep = "\t"
 )
 ```
 
@@ -140,78 +140,78 @@ studies <- fread(
 #| echo: false
 
 studies %>%
-  mutate(
-    id = if_else(
-      source %in% c("CHARGE", "DIAGRAM"),
-      paste0(
-        "<a href='",
-        link,
-        "'>",
-        id,
-        "</a>"
-      ),
-      id
-    ),
-    id = if_else(
-      source %in% c("GCST", "GEFOS", "MEGASTROKE"),
-      paste0(
-        "<a href='https://www.ebi.ac.uk/gwas/studies/",
-        id,
-        "/'>",
-        id,
-        "</a>"
-      ),
-      id
-    ),
-    id = if_else(
-      source %in% c("PUKB"),
-      paste0(
-        "<a href='https://pan.ukbb.broadinstitute.org/downloads'>",
-        id,
-        "</a>"
-      ),
-      id
-    ),
-    id = if_else(
-      source %in% c("UKB"),
-      paste0(
-        "<a href='http://www.nealelab.is/uk-biobank'>",
-        id,
-        "</a>"
-      ),
-      id
-    ),
-    pmid = paste0(
-      "<a href='https://pubmed.ncbi.nlm.nih.gov/",
-      pmid,
-      "'>",
-      pmid,
-      "</a>"
+    mutate(
+        id = if_else(
+            source %in% c("CHARGE", "DIAGRAM"),
+            paste0(
+                "<a href='",
+                link,
+                "'>",
+                id,
+                "</a>"
+            ),
+            id
+        ),
+        id = if_else(
+            source %in% c("GCST", "GEFOS", "MEGASTROKE"),
+            paste0(
+                "<a href='https://www.ebi.ac.uk/gwas/studies/",
+                id,
+                "/'>",
+                id,
+                "</a>"
+            ),
+            id
+        ),
+        id = if_else(
+            source %in% c("PUKB"),
+            paste0(
+                "<a href='https://pan.ukbb.broadinstitute.org/downloads'>",
+                id,
+                "</a>"
+            ),
+            id
+        ),
+        id = if_else(
+            source %in% c("UKB"),
+            paste0(
+                "<a href='http://www.nealelab.is/uk-biobank'>",
+                id,
+                "</a>"
+            ),
+            id
+        ),
+        pmid = paste0(
+            "<a href='https://pubmed.ncbi.nlm.nih.gov/",
+            pmid,
+            "'>",
+            pmid,
+            "</a>"
+        )
+    ) %>%
+    select(id, pmid, trait, abbr, ancestry, n, n_cases, n_controls) %>%
+    reactable(
+        searchable = TRUE,
+        pagination = TRUE,
+        bordered = TRUE,
+        striped = TRUE,
+        columns = list(
+            id = colDef(
+                name = "Dataset ID", minWidth = 100, align = "left", html = TRUE
+            ),
+            pmid = colDef(
+                name = "PubMed ID", minWidth = 80, align = "left", html = TRUE
+            ),
+            trait = colDef(name = "Phenotype", minWidth = 140, align = "left"),
+            abbr = colDef(name = "Abbreviation", minWidth = 100, align = "left"),
+            ancestry = colDef(name = "Ancestry", minWidth = 100, align = "left"),
+            n = colDef(name = "Number of samples", minWidth = 80, align = "left"),
+            n_cases = colDef(name = "Number of cases", minWidth = 80, align = "left"),
+            n_controls = colDef(
+                name = "Number of controls", minWidth = 80, align = "left"
+            )
+        )
     )
-  ) %>%
-  select(id, pmid, trait, abbr, ancestry, n, n_cases, n_controls) %>%
-  reactable(
-    searchable = TRUE,
-    pagination = TRUE,
-    bordered = TRUE,
-    striped = TRUE,
-    columns = list(
-      id = colDef(
-        name = "Dataset ID", minWidth = 100, align = "left", html = TRUE
-      ),
-      pmid = colDef(
-        name = "PubMed ID", minWidth = 80, align = "left", html = TRUE
-      ),
-      trait = colDef(name = "Phenotype", minWidth = 140, align = "left"),
-      abbr = colDef(name = "Abbreviation", minWidth = 100, align = "left"),
-      ancestry = colDef(name = "Ancestry", minWidth = 100, align = "left"),
-      n = colDef(name = "Number of samples", minWidth = 80, align = "left"),
-      n_cases = colDef(name = "Number of cases", minWidth = 80, align = "left"),
-      n_controls = colDef(
-        name = "Number of controls", minWidth = 80, align = "left"
-      )
-    )
-  )
 ```
 
 ```{r}
@@ -219,14 +219,14 @@ studies %>%
 #| echo: false
 
 studies %>%
-  downloadthis::download_this(
-    output_name = "studies",
-    output_extension = ".xlsx",
-    button_label = "Download as xlsx",
-    button_type = "primary",
-    has_icon = TRUE,
-    icon = "fa fa-save"
-  )
+    downloadthis::download_this(
+        output_name = "studies",
+        output_extension = ".xlsx",
+        button_label = "Download as xlsx",
+        button_type = "primary",
+        has_icon = TRUE,
+        icon = "fa fa-save"
+    )
 ```
 
 <details>

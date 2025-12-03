@@ -17,8 +17,8 @@ library(dplyr)
 
 # pQTLs
 pqtls <- fread(
-  "./data/00_data_pqtls.tsv",
-  header = TRUE, data.table = FALSE, sep = "\t"
+    "./data/00_data_pqtls.tsv",
+    header = TRUE, data.table = FALSE, sep = "\t"
 )
 
 # LD matrix
@@ -38,9 +38,9 @@ load("./data/01_data_ldmat.Rda")
 
 # LD matrix for pQTLs
 ld_mat_pqtls <- ld_mat[
-  match(pqtls$rsid, rownames(ld_mat)),
-  match(pqtls$rsid, colnames(ld_mat)),
-  drop = FALSE
+    match(pqtls$rsid, rownames(ld_mat)),
+    match(pqtls$rsid, colnames(ld_mat)),
+    drop = FALSE
 ]
 
 # Compute r2 from r
@@ -48,10 +48,10 @@ ld_mat_pqtls <- round(ld_mat_pqtls^2, 3)
 
 # Heatmap
 heatmaply::heatmaply(
-  ld_mat_pqtls,
-  label_names = c("Variant 1", "Variant 2", "r2"),
-  row_dend_left = TRUE,
-  key.title = "r2"
+    ld_mat_pqtls,
+    label_names = c("Variant 1", "Variant 2", "r2"),
+    row_dend_left = TRUE,
+    key.title = "r2"
 )
 ```
 
@@ -66,9 +66,9 @@ Since *CD300LG* located nearby to *SOST* is known to be associated with HDL chol
 
 # LD matrix for pQTLs and CD300LG variants
 ld_mat_pqtls_cd300lg <- ld_mat[
-  match(c(pqtls$rsid, "rs72836561", "rs72836567"), rownames(ld_mat)),
-  match(c(pqtls$rsid, "rs72836561", "rs72836567"), colnames(ld_mat)),
-  drop = FALSE
+    match(c(pqtls$rsid, "rs72836561", "rs72836567"), rownames(ld_mat)),
+    match(c(pqtls$rsid, "rs72836561", "rs72836567"), colnames(ld_mat)),
+    drop = FALSE
 ]
 
 # Compute r2 from r
@@ -76,18 +76,18 @@ ld_mat_pqtls_cd300lg <- round(ld_mat_pqtls_cd300lg^2, 3)
 
 # CD300LG correlations
 ld_mat_pqtls_cd300lg <- ld_mat_pqtls_cd300lg[
-  pqtls$rsid,
-  c("rs72836561", "rs72836567"),
-  drop = FALSE
+    pqtls$rsid,
+    c("rs72836561", "rs72836567"),
+    drop = FALSE
 ]
 
 # Heatmap
 heatmaply::heatmaply(
-  ld_mat_pqtls_cd300lg,
-  dendrogram = "none",
-  label_names = c("Sclerostin pQTL", "CD300LG variant", "r2"),
-  limits = c(0, 1),
-  key.title = "r2"
+    ld_mat_pqtls_cd300lg,
+    dendrogram = "none",
+    label_names = c("Sclerostin pQTL", "CD300LG variant", "r2"),
+    limits = c(0, 1),
+    key.title = "r2"
 )
 ```
 

@@ -39,12 +39,12 @@ Genetic associations of the sclerostin pQTLs in the datasets in [@tbl-gwas-study
 
 load("./data/03_data_gwas_pqtls.Rda")
 gwas <- studies %>%
-  select(id, pmid, trait, n, n_cases, flag) %>%
-  inner_join(
-    x = .,
-    y = gwas,
-    by = "id"
-  ) 
+    select(id, pmid, trait, n, n_cases, flag) %>%
+    inner_join(
+        x = .,
+        y = gwas,
+        by = "id"
+    )
 ```
 
 ```{r}
@@ -52,15 +52,15 @@ gwas <- studies %>%
 #| echo: false
 
 gwas %>%
-  select(-c(flag)) %>%
-  downloadthis::download_this(
-    output_name = "gwas",
-    output_extension = ".xlsx",
-    button_label = "Download as xlsx",
-    button_type = "primary",
-    has_icon = TRUE,
-    icon = "fa fa-save"
-  )
+    select(-c(flag)) %>%
+    downloadthis::download_this(
+        output_name = "gwas",
+        output_extension = ".xlsx",
+        button_label = "Download as xlsx",
+        button_type = "primary",
+        has_icon = TRUE,
+        icon = "fa fa-save"
+    )
 ```
 
 <details>
@@ -95,9 +95,9 @@ Genetic associations of the sclerostin pQTLs with cardiovascular events and risk
 #| label: pqtls-assoc
 
 assoc <- gwas %>%
-  filter(flag == "Y" & !(id %in% c("GCST006979", "GCST006980"))) %>%
-  select(id, pmid, trait, n, n_cases, rsid, pvalue) %>%
-  arrange(pvalue)
+    filter(flag == "Y" & !(id %in% c("GCST006979", "GCST006980"))) %>%
+    select(id, pmid, trait, n, n_cases, rsid, pvalue) %>%
+    arrange(pvalue)
 ```
 
 ```{r}
@@ -111,21 +111,21 @@ assoc <- gwas %>%
 #| echo: false
 
 assoc %>%
-  reactable(
-    searchable = TRUE,
-    pagination = TRUE,
-    bordered = TRUE,
-    striped = TRUE,
-    columns = list(
-      id = colDef(name = "Dataset ID", minWidth = 100, align = "left"),
-      pmid = colDef(name = "PubMed ID", minWidth = 80, align = "left"),
-      trait = colDef(name = "Phenotype", minWidth = 140, align = "left"),
-      n = colDef(name = "Number of samples", minWidth = 80, align = "left"),
-      n_cases = colDef(name = "Number of cases", minWidth = 80, align = "left"),
-      rsid = colDef(name = "rsID", minWidth = 100, align = "left"),
-      pvalue = colDef(name = "P-value", minWidth = 80, align = "left")
+    reactable(
+        searchable = TRUE,
+        pagination = TRUE,
+        bordered = TRUE,
+        striped = TRUE,
+        columns = list(
+            id = colDef(name = "Dataset ID", minWidth = 100, align = "left"),
+            pmid = colDef(name = "PubMed ID", minWidth = 80, align = "left"),
+            trait = colDef(name = "Phenotype", minWidth = 140, align = "left"),
+            n = colDef(name = "Number of samples", minWidth = 80, align = "left"),
+            n_cases = colDef(name = "Number of cases", minWidth = 80, align = "left"),
+            rsid = colDef(name = "rsID", minWidth = 100, align = "left"),
+            pvalue = colDef(name = "P-value", minWidth = 80, align = "left")
+        )
     )
-  )
 ```
 
 ### QQ plot
@@ -151,9 +151,9 @@ Genetic associations of the sclerostin pQTLs with cardiovascular events and risk
 #| label: pqtls-assoc-add
 
 assoc_add <- gwas %>%
-  filter(flag == "N") %>%
-  select(id, pmid, trait, n, n_cases, rsid, pvalue) %>%
-  arrange(pvalue)
+    filter(flag == "N") %>%
+    select(id, pmid, trait, n, n_cases, rsid, pvalue) %>%
+    arrange(pvalue)
 ```
 
 ```{r}
@@ -167,21 +167,21 @@ assoc_add <- gwas %>%
 #| echo: false
 
 assoc_add %>%
-  reactable(
-    searchable = TRUE,
-    pagination = TRUE,
-    bordered = TRUE,
-    striped = TRUE,
-    columns = list(
-      id = colDef(name = "Dataset ID", minWidth = 100, align = "left"),
-      pmid = colDef(name = "PubMed ID", minWidth = 80, align = "left"),
-      trait = colDef(name = "Phenotype", minWidth = 140, align = "left"),
-      n = colDef(name = "Number of samples", minWidth = 80, align = "left"),
-      n_cases = colDef(name = "Number of cases", minWidth = 80, align = "left"),
-      rsid = colDef(name = "rsID", minWidth = 100, align = "left"),
-      pvalue = colDef(name = "P-value", minWidth = 80, align = "left")
+    reactable(
+        searchable = TRUE,
+        pagination = TRUE,
+        bordered = TRUE,
+        striped = TRUE,
+        columns = list(
+            id = colDef(name = "Dataset ID", minWidth = 100, align = "left"),
+            pmid = colDef(name = "PubMed ID", minWidth = 80, align = "left"),
+            trait = colDef(name = "Phenotype", minWidth = 140, align = "left"),
+            n = colDef(name = "Number of samples", minWidth = 80, align = "left"),
+            n_cases = colDef(name = "Number of cases", minWidth = 80, align = "left"),
+            rsid = colDef(name = "rsID", minWidth = 100, align = "left"),
+            pvalue = colDef(name = "P-value", minWidth = 80, align = "left")
+        )
     )
-  )
 ```
 
 ### QQ plot
