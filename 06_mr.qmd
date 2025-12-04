@@ -293,6 +293,7 @@ mr_results %>%
 ```{r}
 #| label: fig-qq-org-2-pqtls
 #| fig-cap: QQ plot of MR results (2 *cis* pQTLs) for the original datasets
+#| warning: false
 
 mr_results %>%
     filter(model == "2_cis_pqtls") %>%
@@ -311,6 +312,7 @@ mr_results %>%
 ```{r}
 #| label: fig-qq-org-5-pqtls
 #| fig-cap: QQ plot of MR results (5 *cis* pQTLs) for the original datasets
+#| warning: false
 
 mr_results %>%
     filter(model == "5_cis_pqtls") %>%
@@ -335,6 +337,7 @@ mr_results %>%
 ```{r}
 #| label: fig-qq-add-2-pqtls
 #| fig-cap: QQ plot of MR results (2 *cis* pQTLs) for the additional datasets
+#| warning: false
 
 mr_results %>%
     filter(model == "2_cis_pqtls") %>%
@@ -352,6 +355,7 @@ mr_results %>%
 ```{r}
 #| label: fig-qq-add-5-pqtls
 #| fig-cap: QQ plot of MR results (5 *cis* pQTLs) for the additional datasets
+#| warning: false
 
 mr_results %>%
     filter(model == "5_cis_pqtls") %>%

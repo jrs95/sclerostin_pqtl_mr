@@ -133,6 +133,7 @@ assoc %>%
 ```{r}
 #| label: fig-qq-pqtls-assoc
 #| fig-cap: QQ plot of GWAS associations with sclerostin pQTLs (original datasets)
+#| warning: false
 
 qq_plot(assoc)
 ```
@@ -189,6 +190,7 @@ assoc_add %>%
 ```{r}
 #| label: fig-qq-pqtls-assoc-add
 #| fig-cap: QQ plot of GWAS associations with sclerostin pQTLs (additional datasets)
+#| warning: false
 
 qq_plot(assoc_add)
 ```

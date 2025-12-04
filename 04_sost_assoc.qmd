@@ -27,11 +27,11 @@ load("./data/02_data_gwas_sost_region.Rda")
 
 # SOST region
 gwas <- gwas %>%
-  filter(
-    chr == "17" &
-      pos >= 41831099 - 100000 &
-      pos <= 41836156 + 100000
-  )
+    filter(
+        chr == "17" &
+            pos >= 41831099 - 100000 &
+            pos <= 41836156 + 100000
+    )
 ```
 
 ## Original datasets
@@ -50,14 +50,14 @@ Genetic associations in the *SOST* region for the datasets in [@tbl-gwas-study-i
 #| fig-cap: Regional plot of the *SOST* region for myocardial infarction (GCST011365)
 
 gwas %>%
-  filter(id == "GCST011365") %>%
-  regional_plot(
-    data = .,
-    corr = ld_mat,
-    top_marker = "rs66838809",
-    highlights = pqtls$rsid,
-    highlights_title = "Sclerostin associated variants"
-  )
+    filter(id == "GCST011365") %>%
+    regional_plot(
+        data = .,
+        corr = ld_mat,
+        top_marker = "rs66838809",
+        highlights = pqtls$rsid,
+        highlights_title = "Sclerostin associated variants"
+    )
 ```
 
 #### QQ plot
@@ -65,10 +65,11 @@ gwas %>%
 ```{r}
 #| label: fig-qq-sost-mi
 #| fig-cap: QQ plot of the *SOST* region for myocardial infarction (GCST011365)
+#| warning: false
 
 gwas %>%
-  filter(id == "GCST011365") %>%
-  qq_plot()
+    filter(id == "GCST011365") %>%
+    qq_plot()
 ```
 
 :::
@@ -83,14 +84,14 @@ gwas %>%
 #| fig-cap: Regional plot of the *SOST* region for coronary artery disease (GCST005194)
 
 gwas %>%
-  filter(id == "GCST005194") %>%
-  regional_plot(
-    data = .,
-    corr = ld_mat,
-    top_marker = "rs66838809",
-    highlights = pqtls$rsid,
-    highlights_title = "Sclerostin associated variants"
-  )
+    filter(id == "GCST005194") %>%
+    regional_plot(
+        data = .,
+        corr = ld_mat,
+        top_marker = "rs66838809",
+        highlights = pqtls$rsid,
+        highlights_title = "Sclerostin associated variants"
+    )
 ```
 
 #### QQ plot
@@ -98,10 +99,11 @@ gwas %>%
 ```{r}
 #| label: fig-qq-sost-cad
 #| fig-cap: QQ plot of the *SOST* region for coronary artery disease (GCST005194)
+#| warning: false
 
 gwas %>%
-  filter(id == "GCST005194") %>%
-  qq_plot()
+    filter(id == "GCST005194") %>%
+    qq_plot()
 ```
 
 :::
@@ -116,14 +118,14 @@ gwas %>%
 #| fig-cap: Regional plot of the *SOST* region for ischemic stroke (GCST005843)
 
 gwas %>%
-  filter(id == "GCST005843") %>%
-  regional_plot(
-    data = .,
-    corr = ld_mat,
-    top_marker = "rs66838809",
-    highlights = pqtls$rsid,
-    highlights_title = "Sclerostin associated variants"
-  )
+    filter(id == "GCST005843") %>%
+    regional_plot(
+        data = .,
+        corr = ld_mat,
+        top_marker = "rs66838809",
+        highlights = pqtls$rsid,
+        highlights_title = "Sclerostin associated variants"
+    )
 ```
 
 #### QQ plot
@@ -131,10 +133,11 @@ gwas %>%
 ```{r}
 #| label: fig-qq-sost-is
 #| fig-cap: QQ plot of the *SOST* region for ischemic stroke (GCST005843)
+#| warning: false
 
 gwas %>%
-  filter(id == "GCST005843") %>%
-  qq_plot()
+    filter(id == "GCST005843") %>%
+    qq_plot()
 ```
 
 :::
@@ -149,14 +152,14 @@ gwas %>%
 #| fig-cap: Regional plot of the *SOST* region for cardioembolic stroke (GCST005842)
 
 gwas %>%
-  filter(id == "GCST005842") %>%
-  regional_plot(
-    data = .,
-    corr = ld_mat,
-    top_marker = "rs66838809",
-    highlights = pqtls$rsid,
-    highlights_title = "Sclerostin associated variants"
-  )
+    filter(id == "GCST005842") %>%
+    regional_plot(
+        data = .,
+        corr = ld_mat,
+        top_marker = "rs66838809",
+        highlights = pqtls$rsid,
+        highlights_title = "Sclerostin associated variants"
+    )
 ```
 
 #### QQ plot
@@ -164,9 +167,11 @@ gwas %>%
 ```{r}
 #| label: fig-qq-sost-ces
 #| fig-cap: QQ plot of the *SOST* region for cardioembolic stroke (GCST005842)
+#| warning: false
+
 gwas %>%
-  filter(id == "GCST005842") %>%
-  qq_plot()
+    filter(id == "GCST005842") %>%
+    qq_plot()
 ```
 
 :::
@@ -181,14 +186,14 @@ gwas %>%
 #| fig-cap: Regional plot of the *SOST* region for type 2 diabetes (GCST006867)
 
 gwas %>%
-  filter(id == "GCST006867") %>%
-  regional_plot(
-    data = .,
-    corr = ld_mat,
-    top_marker = "rs1107747",
-    highlights = pqtls$rsid,
-    highlights_title = "Sclerostin associated variants"
-  )
+    filter(id == "GCST006867") %>%
+    regional_plot(
+        data = .,
+        corr = ld_mat,
+        top_marker = "rs1107747",
+        highlights = pqtls$rsid,
+        highlights_title = "Sclerostin associated variants"
+    )
 ```
 
 #### QQ plot
@@ -196,10 +201,11 @@ gwas %>%
 ```{r}
 #| label: fig-qq-sost-t2d
 #| fig-cap: QQ plot of the *SOST* region for type 2 diabetes (GCST006867)
+#| warning: false
 
 gwas %>%
-  filter(id == "GCST006867") %>%
-  qq_plot()
+    filter(id == "GCST006867") %>%
+    qq_plot()
 ```
 
 :::
@@ -214,14 +220,14 @@ gwas %>%
 #| fig-cap: Regional plot of the *SOST* region for hypertension (UKB200021065)
 
 gwas %>%
-  filter(id == "UKB200021065") %>%
-  regional_plot(
-    data = .,
-    corr = ld_mat,
-    top_marker = "rs66838809",
-    highlights = pqtls$rsid,
-    highlights_title = "Sclerostin associated variants"
-  )
+    filter(id == "UKB200021065") %>%
+    regional_plot(
+        data = .,
+        corr = ld_mat,
+        top_marker = "rs66838809",
+        highlights = pqtls$rsid,
+        highlights_title = "Sclerostin associated variants"
+    )
 ```
 
 #### QQ plot
@@ -229,10 +235,11 @@ gwas %>%
 ```{r}
 #| label: fig-qq-sost-htn
 #| fig-cap: QQ plot of the *SOST* region for hypertension (UKB200021065)
+#| warning: false
 
 gwas %>%
-  filter(id == "UKB200021065") %>%
-  qq_plot()
+    filter(id == "UKB200021065") %>%
+    qq_plot()
 ```
 
 :::
@@ -247,14 +254,14 @@ gwas %>%
 #| fig-cap: Regional plot of the *SOST* region for abdominal aortic calcification (PHS000930AAC)
 
 gwas %>%
-  filter(id == "PHS000930AAC") %>%
-  regional_plot(
-    data = .,
-    corr = ld_mat,
-    top_marker = "rs66838809",
-    highlights = pqtls$rsid,
-    highlights_title = "Sclerostin associated variants"
-  )
+    filter(id == "PHS000930AAC") %>%
+    regional_plot(
+        data = .,
+        corr = ld_mat,
+        top_marker = "rs66838809",
+        highlights = pqtls$rsid,
+        highlights_title = "Sclerostin associated variants"
+    )
 ```
 
 #### QQ plot
@@ -262,10 +269,11 @@ gwas %>%
 ```{r}
 #| label: fig-qq-sost-aac
 #| fig-cap: QQ plot of the *SOST* region for abdominal aortic calcification (PHS000930AAC)
+#| warning: false
 
 gwas %>%
-  filter(id == "PHS000930AAC") %>%
-  qq_plot()
+    filter(id == "PHS000930AAC") %>%
+    qq_plot()
 ```
 
 :::
@@ -280,14 +288,14 @@ gwas %>%
 #| fig-cap: Regional plot of the *SOST* region for LDL cholesterol (UKB30780)
 
 gwas %>%
-  filter(id == "UKB30780") %>%
-  regional_plot(
-    data = .,
-    corr = ld_mat,
-    top_marker = "rs66838809",
-    highlights = pqtls$rsid,
-    highlights_title = "Sclerostin associated variants"
-  )
+    filter(id == "UKB30780") %>%
+    regional_plot(
+        data = .,
+        corr = ld_mat,
+        top_marker = "rs66838809",
+        highlights = pqtls$rsid,
+        highlights_title = "Sclerostin associated variants"
+    )
 ```
 
 #### QQ plot
@@ -295,10 +303,11 @@ gwas %>%
 ```{r}
 #| label: fig-qq-sost-ldl
 #| fig-cap: QQ plot of the *SOST* region for LDL cholesterol (UKB30780)
+#| warning: false
 
 gwas %>%
-  filter(id == "UKB30780") %>%
-  qq_plot()
+    filter(id == "UKB30780") %>%
+    qq_plot()
 ```
 
 :::
@@ -313,14 +322,14 @@ gwas %>%
 #| fig-cap: Regional plot of the *SOST* region for HDL cholesterol (UKB30760)
 
 gwas %>%
-  filter(id == "UKB30760") %>%
-  regional_plot(
-    data = .,
-    corr = ld_mat,
-    highlights = pqtls$rsid,
-    highlights_title = "Sclerostin associated variants",
-    highlights_label = FALSE
-  )
+    filter(id == "UKB30760") %>%
+    regional_plot(
+        data = .,
+        corr = ld_mat,
+        highlights = pqtls$rsid,
+        highlights_title = "Sclerostin associated variants",
+        highlights_label = FALSE
+    )
 ```
 
 Note: rs72836561 is a missense variant in *CD300LG* that is known to be associated with lipid profiles [@surakka2015].  
@@ -330,10 +339,11 @@ Note: rs72836561 is a missense variant in *CD300LG* that is known to be associat
 ```{r}
 #| label: fig-qq-sost-hdl
 #| fig-cap: QQ plot of the *SOST* region for HDL cholesterol (UKB30760)
+#| warning: false
 
 gwas %>%
-  filter(id == "UKB30760") %>%
-  qq_plot()
+    filter(id == "UKB30760") %>%
+    qq_plot()
 ```
 
 Note: rs72836561 is a missense variant in *CD300LG* that is known to be associated with lipid profiles [@surakka2015].  
@@ -350,14 +360,14 @@ Note: rs72836561 is a missense variant in *CD300LG* that is known to be associat
 #| fig-cap: Regional plot of the *SOST* region for triglycerides (UKB30870)
 
 gwas %>%
-  filter(id == "UKB30870") %>%
-  regional_plot(
-    data = .,
-    corr = ld_mat,
-    highlights = pqtls$rsid,
-    highlights_title = "Sclerostin associated variants",
-    highlights_label = FALSE
-  )
+    filter(id == "UKB30870") %>%
+    regional_plot(
+        data = .,
+        corr = ld_mat,
+        highlights = pqtls$rsid,
+        highlights_title = "Sclerostin associated variants",
+        highlights_label = FALSE
+    )
 ```
 
 Note: rs72836561 is a missense variant in *CD300LG* that is known to be associated with lipid profiles [@surakka2015].  
@@ -367,10 +377,11 @@ Note: rs72836561 is a missense variant in *CD300LG* that is known to be associat
 ```{r}
 #| label: fig-qq-sost-tg
 #| fig-cap: QQ plot of the *SOST* region for triglycerides (UKB30870)
+#| warning: false
 
 gwas %>%
-  filter(id == "UKB30870") %>%
-  qq_plot()
+    filter(id == "UKB30870") %>%
+    qq_plot()
 ```
 
 Note: rs72836561 is a missense variant in *CD300LG* that is known to be associated with lipid profiles [@surakka2015].  
@@ -387,14 +398,14 @@ Note: rs72836561 is a missense variant in *CD300LG* that is known to be associat
 #| fig-cap: Regional plot of the *SOST* region for apolipoprotein A-I (UKB30630)
 
 gwas %>%
-  filter(id == "UKB30630") %>%
-  regional_plot(
-    data = .,
-    corr = ld_mat,
-    highlights = pqtls$rsid,
-    highlights_title = "Sclerostin associated variants",
-    highlights_label = FALSE
-  )
+    filter(id == "UKB30630") %>%
+    regional_plot(
+        data = .,
+        corr = ld_mat,
+        highlights = pqtls$rsid,
+        highlights_title = "Sclerostin associated variants",
+        highlights_label = FALSE
+    )
 ```
 
 Note: rs72836561 is a missense variant in *CD300LG* that is known to be associated with lipid profiles [@surakka2015].  
@@ -404,10 +415,11 @@ Note: rs72836561 is a missense variant in *CD300LG* that is known to be associat
 ```{r}
 #| label: fig-qq-sost-apoa
 #| fig-cap: QQ plot of the *SOST* region for apolipoprotein A-I (UKB30630)
+#| warning: false
 
 gwas %>%
-  filter(id == "UKB30630") %>%
-  qq_plot()
+    filter(id == "UKB30630") %>%
+    qq_plot()
 ```
 
 Note: rs72836561 is a missense variant in *CD300LG* that is known to be associated with lipid profiles [@surakka2015].  
@@ -424,14 +436,14 @@ Note: rs72836561 is a missense variant in *CD300LG* that is known to be associat
 #| fig-cap: Regional plot of the *SOST* region for apolipoprotein B (UKB30640)
 
 gwas %>%
-  filter(id == "UKB30640") %>%
-  regional_plot(
-    data = .,
-    corr = ld_mat,
-    top_marker = "rs66838809",
-    highlights = pqtls$rsid,
-    highlights_title = "Sclerostin associated variants"
-  )
+    filter(id == "UKB30640") %>%
+    regional_plot(
+        data = .,
+        corr = ld_mat,
+        top_marker = "rs66838809",
+        highlights = pqtls$rsid,
+        highlights_title = "Sclerostin associated variants"
+    )
 ```
 
 #### QQ plot
@@ -439,10 +451,11 @@ gwas %>%
 ```{r}
 #| label: fig-qq-sost-apob
 #| fig-cap: QQ plot of the *SOST* region for apolipoprotein B (UKB30640)
+#| warning: false
 
 gwas %>%
-  filter(id == "UKB30640") %>%
-  qq_plot()
+    filter(id == "UKB30640") %>%
+    qq_plot()
 ```
 
 :::
@@ -457,14 +470,14 @@ gwas %>%
 #| fig-cap: Regional plot of the *SOST* region for fracture (GCST006980)
 
 gwas %>%
-  filter(id == "GCST006980") %>%
-  regional_plot(
-    data = .,
-    corr = ld_mat,
-    top_marker = "rs66838809",
-    highlights = pqtls$rsid,
-    highlights_title = "Sclerostin associated variants"
-  )
+    filter(id == "GCST006980") %>%
+    regional_plot(
+        data = .,
+        corr = ld_mat,
+        top_marker = "rs66838809",
+        highlights = pqtls$rsid,
+        highlights_title = "Sclerostin associated variants"
+    )
 ```
 
 #### QQ plot
@@ -472,10 +485,11 @@ gwas %>%
 ```{r}
 #| label: fig-qq-sost-frac
 #| fig-cap: QQ plot of the *SOST* region for fracture (GCST006980)
+#| warning: false
 
 gwas %>%
-  filter(id == "GCST006980") %>%
-  qq_plot()
+    filter(id == "GCST006980") %>%
+    qq_plot()
 ```
 
 :::
@@ -490,14 +504,14 @@ gwas %>%
 #| fig-cap: Regional plot of the *SOST* region for heel bone mineral density (GCST006979)
 
 gwas %>%
-  filter(id == "GCST006979") %>%
-  regional_plot(
-    data = .,
-    corr = ld_mat,
-    top_marker = "rs66838809",
-    highlights = pqtls$rsid,
-    highlights_title = "Sclerostin associated variants"
-  )
+    filter(id == "GCST006979") %>%
+    regional_plot(
+        data = .,
+        corr = ld_mat,
+        top_marker = "rs66838809",
+        highlights = pqtls$rsid,
+        highlights_title = "Sclerostin associated variants"
+    )
 ```
 
 #### QQ plot
@@ -505,10 +519,11 @@ gwas %>%
 ```{r}
 #| label: fig-qq-sost-bmd
 #| fig-cap: QQ plot of the *SOST* region for heel bone mineral density (GCST006979)
+#| warning: false
 
 gwas %>%
-  filter(id == "GCST006979") %>%
-  qq_plot()
+    filter(id == "GCST006979") %>%
+    qq_plot()
 ```
 
 :::
@@ -531,14 +546,14 @@ Genetic associations in the *SOST* region for the additional recent GWAS dataset
 #| fig-cap: Regional plot of the *SOST* region for coronary artery disease (GCST90132315)
 
 gwas %>%
-  filter(id == "GCST90132315") %>%
-  regional_plot(
-    data = .,
-    corr = ld_mat,
-    top_marker = "rs66838809",
-    highlights = pqtls$rsid,
-    highlights_title = "Sclerostin associated variants"
-  )
+    filter(id == "GCST90132315") %>%
+    regional_plot(
+        data = .,
+        corr = ld_mat,
+        top_marker = "rs66838809",
+        highlights = pqtls$rsid,
+        highlights_title = "Sclerostin associated variants"
+    )
 ```
 
 Note: the allele of rs851058 associated with lower coronary artery disease risk is also associated with lower mRNA expression of the *SOST* in [GTEx](https://gtexportal.org/home/snp/rs851058) [@gtex2020] and higher bone mineral density [@morris2019].  
@@ -548,10 +563,11 @@ Note: the allele of rs851058 associated with lower coronary artery disease risk 
 ```{r}
 #| label: fig-qq-add-sost-cad
 #| fig-cap: QQ plot of the *SOST* region for coronary artery disease (GCST90132315)
+#| warning: false
 
 gwas %>%
-  filter(id == "GCST90132315") %>%
-  qq_plot()
+    filter(id == "GCST90132315") %>%
+    qq_plot()
 ```
 
 Note: the allele of rs851058 associated with lower coronary artery disease risk is also associated with lower mRNA expression of the *SOST* in [GTEx](https://gtexportal.org/home/snp/rs851058) [@gtex2020] and higher bone mineral density [@morris2019].  
@@ -568,14 +584,14 @@ Note: the allele of rs851058 associated with lower coronary artery disease risk 
 #| fig-cap: Regional plot of the *SOST* region for ischemic stroke (GCST90104535)
 
 gwas %>%
-  filter(id == "GCST90104535") %>%
-  regional_plot(
-    data = .,
-    corr = ld_mat,
-    top_marker = "rs66838809",
-    highlights = pqtls$rsid,
-    highlights_title = "Sclerostin associated variants"
-  )
+    filter(id == "GCST90104535") %>%
+    regional_plot(
+        data = .,
+        corr = ld_mat,
+        top_marker = "rs66838809",
+        highlights = pqtls$rsid,
+        highlights_title = "Sclerostin associated variants"
+    )
 ```
 
 #### QQ plot
@@ -583,10 +599,11 @@ gwas %>%
 ```{r}
 #| label: fig-qq-add-sost-is
 #| fig-cap: QQ plot of the *SOST* region for ischemic stroke (GCST90104535)
+#| warning: false
 
 gwas %>%
-  filter(id == "GCST90104535") %>%
-  qq_plot()
+    filter(id == "GCST90104535") %>%
+    qq_plot()
 ```
 
 :::
@@ -601,14 +618,14 @@ gwas %>%
 #| fig-cap: Regional plot of the *SOST* region for cardioembolic stroke (GCST90104536)
 
 gwas %>%
-  filter(id == "GCST90104536") %>%
-  regional_plot(
-    data = .,
-    corr = ld_mat,
-    top_marker = "rs66838809",
-    highlights = pqtls$rsid,
-    highlights_title = "Sclerostin associated variants"
-  )
+    filter(id == "GCST90104536") %>%
+    regional_plot(
+        data = .,
+        corr = ld_mat,
+        top_marker = "rs66838809",
+        highlights = pqtls$rsid,
+        highlights_title = "Sclerostin associated variants"
+    )
 ```
 
 #### QQ plot
@@ -616,10 +633,11 @@ gwas %>%
 ```{r}
 #| label: fig-qq-add-sost-ces
 #| fig-cap: QQ plot of the *SOST* region for cardioembolic stroke (GCST90104536)
+#| warning: false
 
 gwas %>%
-  filter(id == "GCST90104536") %>%
-  qq_plot()
+    filter(id == "GCST90104536") %>%
+    qq_plot()
 ```
 
 :::
@@ -634,14 +652,14 @@ gwas %>%
 #| fig-cap: Regional plot of the *SOST* region for large artery stroke	(GCST90104538)
 
 gwas %>%
-  filter(id == "GCST90104538") %>%
-  regional_plot(
-    data = .,
-    corr = ld_mat,
-    top_marker = "rs66838809",
-    highlights = pqtls$rsid,
-    highlights_title = "Sclerostin associated variants"
-  )
+    filter(id == "GCST90104538") %>%
+    regional_plot(
+        data = .,
+        corr = ld_mat,
+        top_marker = "rs66838809",
+        highlights = pqtls$rsid,
+        highlights_title = "Sclerostin associated variants"
+    )
 ```
 
 #### QQ plot
@@ -649,10 +667,11 @@ gwas %>%
 ```{r}
 #| label: fig-qq-add-sost-las
 #| fig-cap: QQ plot of the *SOST* region for large artery stroke	(GCST90104538)
+#| warning: false
 
 gwas %>%
-  filter(id == "GCST90104538") %>%
-  qq_plot()
+    filter(id == "GCST90104538") %>%
+    qq_plot()
 ```
 
 :::
@@ -667,14 +686,14 @@ gwas %>%
 #| fig-cap: Regional plot of the *SOST* region for small vessel stroke	(GCST90104537)
 
 gwas %>%
-  filter(id == "GCST90104537") %>%
-  regional_plot(
-    data = .,
-    corr = ld_mat,
-    top_marker = "rs66838809",
-    highlights = pqtls$rsid,
-    highlights_title = "Sclerostin associated variants"
-  )
+    filter(id == "GCST90104537") %>%
+    regional_plot(
+        data = .,
+        corr = ld_mat,
+        top_marker = "rs66838809",
+        highlights = pqtls$rsid,
+        highlights_title = "Sclerostin associated variants"
+    )
 ```
 
 #### QQ plot
@@ -682,10 +701,11 @@ gwas %>%
 ```{r}
 #| label: fig-qq-add-sost-svs
 #| fig-cap: QQ plot of the *SOST* region for small vessel stroke (GCST90104537)
+#| warning: false
 
 gwas %>%
-  filter(id == "GCST90104537") %>%
-  qq_plot()
+    filter(id == "GCST90104537") %>%
+    qq_plot()
 ```
 
 :::
@@ -700,14 +720,14 @@ gwas %>%
 #| fig-cap: Regional plot of the *SOST* region for type 2 diabetes (GCST90132183)
 
 gwas %>%
-  filter(id == "GCST90132183") %>%
-  regional_plot(
-    data = .,
-    corr = ld_mat,
-    top_marker = "rs66838809",
-    highlights = pqtls$rsid,
-    highlights_title = "Sclerostin associated variants"
-  )
+    filter(id == "GCST90132183") %>%
+    regional_plot(
+        data = .,
+        corr = ld_mat,
+        top_marker = "rs66838809",
+        highlights = pqtls$rsid,
+        highlights_title = "Sclerostin associated variants"
+    )
 ```
 
 #### QQ plot
@@ -715,10 +735,11 @@ gwas %>%
 ```{r}
 #| label: fig-qq-add-sost-t2d
 #| fig-cap: QQ plot of the *SOST* region for type 2 diabetes (GCST90132183)
+#| warning: false
 
 gwas %>%
-  filter(id == "GCST90132183") %>%
-  qq_plot()
+    filter(id == "GCST90132183") %>%
+    qq_plot()
 ```
 
 :::

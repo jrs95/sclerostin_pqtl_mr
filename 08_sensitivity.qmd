@@ -178,6 +178,7 @@ mr_results %>%
 ```{r}
 #| label: fig-qq-org-2-pqtls-eur
 #| fig-cap: QQ plot of MR results (2 *cis* pQTLs) for the original datasets
+#| warning: false
 
 mr_results %>%
     filter(model == "2_cis_pqtls") %>%
@@ -196,6 +197,7 @@ mr_results %>%
 ```{r}
 #| label: fig-qq-org-5-pqtls-eur
 #| fig-cap: QQ plot of MR results (5 *cis* pQTLs) for the original datasets
+#| warning: false
 
 mr_results %>%
     filter(model == "5_cis_pqtls") %>%
@@ -220,6 +222,7 @@ mr_results %>%
 ```{r}
 #| label: fig-qq-add-2-pqtls-eur
 #| fig-cap: QQ plot of MR results (2 *cis* pQTLs) for the additional datasets
+#| warning: false
 
 mr_results %>%
     filter(model == "2_cis_pqtls") %>%
@@ -237,6 +240,7 @@ mr_results %>%
 ```{r}
 #| label: fig-qq-add-5-pqtls-eur
 #| fig-cap: QQ plot of MR results (5 *cis* pQTLs) for the additional datasets
+#| warning: false
 
 mr_results %>%
     filter(model == "5_cis_pqtls") %>%
@@ -461,6 +465,7 @@ mr_results %>%
 ```{r}
 #| label: fig-qq-org-ukbb
 #| fig-cap: QQ plot of MR results for the original datasets
+#| warning: false
 
 mr_results %>%
     inner_join(
@@ -478,6 +483,7 @@ mr_results %>%
 ```{r}
 #| label: fig-qq-add-ukbb
 #| fig-cap: QQ plot of MR results or the additional datasets
+#| warning: false
 
 mr_results %>%
     inner_join(
